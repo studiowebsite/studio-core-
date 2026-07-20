@@ -1,0 +1,25 @@
+# dipendenze
+node_modules/
+.pnpm-store/
+
+# output degli screenshot
+.shots/
+
+# build
+.next/
+dist/
+build/
+out/
+
+# ambiente e segreti
+.env
+.env.local
+.env.*.local
+
+# preferenze locali di Claude Code
+.claude/settings.local.json
+
+# sistema
+.DS_Store
+Thumbs.db
+*.log
