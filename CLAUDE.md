@@ -157,7 +157,8 @@ ispezione, debug interattivo), non per misurare.
 
 ## 7. 3D — regole di sopravvivenza
 
-Territorio scoperto: nessuna skill installata copre questa parte. Vale interamente qui.
+Queste regole valgono comunque, anche se una skill sul 3D dicesse altro: sono tarate sui
+nostri budget e sui nostri clienti.
 
 - **Mai 3D bloccante above-the-fold.** Sempre poster statico + `<Suspense>`, la scena
   entra quando è pronta.
