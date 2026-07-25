@@ -2,6 +2,10 @@
 node_modules/
 .pnpm-store/
 
+# progetti dei clienti: ogni sito ha un repo git suo, con accessi e storia separati
+# (vedi sites/<cliente>/.git). Qui dentro non deve finirci nulla del cliente.
+sites/
+
 # output degli screenshot
 .shots/
 
