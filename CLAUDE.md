@@ -1,218 +1,158 @@
 # CLAUDE.md — Studio
 
-Caricato in ogni sessione: deve restare corto. Qui sta solo ciò che è **specifico dello
-studio** e ciò che **blocca la consegna**. Tutto il resto è delegato.
-
-**Divisione dei ruoli — leggila una volta e non chiederla più:**
+Caricato in ogni sessione: qui solo ciò che è **specifico dello studio** e ciò che
+**blocca la consegna**. Il resto è delegato. Il *perché* di ogni regola sta nei file
+`rules/`, non qui.
 
 | Chi | Cosa possiede |
 |---|---|
 | **Questo file** | metodo, cancelli di consegna, 3D, vincoli operativi e legali |
 | **Impeccable** (`/impeccable`) | qualità visiva, anti-pattern, critique, audit, detector |
-| **`DESIGN.md`** | specifica dei token del progetto corrente (normativa) |
+| **`DESIGN.md`** | token del progetto corrente (normativo) |
 | **`.claude/rules/`** | approfondimenti, letti su richiesta |
 
-Regola di conflitto: se questo file e Impeccable dicono cose diverse, **vince questo file**
-— ma solo perché conosce il cliente e il 3D, non perché ha più gusto.
+Conflitto tra questo file e Impeccable → **vince questo file** (conosce il cliente e il 3D).
 
 ---
 
 ## 1. Chi siamo
 
-Studio di web design **su misura**. Ogni cliente ha un'identità visiva che non deve poter
-essere scambiata con quella di un altro cliente. Non produciamo varianti dello stesso sito.
+Web design **su misura**. Ogni cliente ha un'identità non scambiabile con quella di un
+altro — mai varianti dello stesso sito. Due specializzazioni: **scene 3D interattive** e
+**configuratori di prodotto**. Il sito attorno al 3D dev'essere veloce, o il 3D è solo un
+pretesto per un sito lento.
 
-Due specializzazioni tecniche:
-- **Scene 3D interattive** (hero, storytelling, ambienti navigabili)
-- **Configuratori di prodotto** (materiali, colori, varianti, prezzo dinamico)
+## 2. Direzione visiva
 
-Il resto del sito attorno al 3D deve essere impeccabile e veloce, altrimenti il 3D
-diventa solo un pretesto per un sito lento.
+Anti-pattern, font vietati, test anti-slop, riflesso di categoria → **di Impeccable**. Non
+duplicarli. Resta nostro un solo principio:
 
-## 2. Qualità visiva → Impeccable
+> La direzione nasce dal **mondo del cliente**. Se una scelta funzionerebbe identica su un
+> altro cliente, è un riempitivo.
 
-Gli anti-pattern, i font vietati, il test anti-slop e il controllo del riflesso di
-categoria sono **di Impeccable**, che li applica e li verifica meglio di quanto potrebbe
-fare una lista qui. Non duplicarli.
+**Pavimento di mestiere** (minimo, non opinione):
+- Colore: mai palette Tailwind di default; si deriva da un colore di marca.
+- Tipografia: display e body font diversi; tracking stretto sui titoli, line-height ampio sul corpo.
+- Ombre: stratificate e tinte, mai l'ombra piatta di default.
+- Profondità: sistema di livelli (base → elevata → fluttuante).
+- Immagini: trattamento coerente su tutte, mai foto nuda.
+- Stati: hover, focus-visible, active su ogni elemento cliccabile; focus tastiera mai rimosso.
+- Spacing: scala coerente, non passi a caso.
+- Motion: solo `transform` e `opacity`, mai `transition-all`.
 
-Resta nostro un solo principio, perché è ciò che vendiamo:
-
-> La direzione visiva nasce dal **mondo del cliente** — i suoi materiali, i suoi strumenti,
-> il suo lessico, i suoi artefatti. Se una scelta funzionerebbe identica su un altro
-> cliente, non è una scelta: è un riempitivo.
+Il salto a "memorabile" è l'elemento firma (§4), dal cliente — non da questa lista.
 
 ## 3. Stack
 
 | Ambito | Scelta |
 |---|---|
 | Framework | Next.js (App Router) + TypeScript strict |
-| Stile | Tailwind + token generati da `DESIGN.md` |
-| Motion | GSAP + ScrollTrigger, Lenis, Framer Motion per micro-interazioni |
+| Stile | Tailwind + token da `DESIGN.md` |
+| Motion | GSAP + ScrollTrigger, Lenis, Framer Motion (micro-interazioni) |
 | 3D | React Three Fiber + drei; Theatre.js per animazioni scriptate |
-| Asset 3D | glTF compresso Draco/Meshopt, texture KTX2 |
-| CMS | Sanity (il cliente deve poter modificare i testi da solo) |
+| Asset 3D | glTF Draco/Meshopt, texture KTX2 |
+| CMS | Sanity |
 | Deploy | Vercel, preview URL per branch |
 
-Non introdurre librerie fuori da questa lista senza chiedere. Ogni dipendenza in più
-è peso che il cliente paga in performance.
+Nessuna libreria fuori lista senza chiedere: ogni dipendenza è peso che il cliente paga.
 
-**Chi comanda sui token.** `DESIGN.md` è la **specifica** — è lì che si decide un colore,
-una scala tipografica, uno spacing. `design-tokens.ts` è la **implementazione**, e deriva
-da `DESIGN.md`. Mai il contrario, mai un valore definito in due posti. Se devi cambiare un
-token, cambialo in `DESIGN.md` e propaga.
-
-**Chi comanda sul motion.** Tre fonti parlano di animazione: usale in quest'ordine e non
-mescolarle.
-1. `rules/motion.md` — le nostre regole, incluso lo screenshot delle animazioni. Vince.
-2. **motion-design** (LottieFiles) — *cosa* animare e con che intento: durate, coreografia,
-   gerarchia. Si consulta in fase di piano, prima di scrivere codice.
-3. **gsap-\*** — *come* scriverlo. Riferimento API, in fase di build.
-
-`animate.md` di Impeccable è un rilevatore di slop, non una guida: le sue segnalazioni si
-correggono, ma non detta la coreografia.
-
-**Documentazione — obbligatorio.** Prima di scrivere codice che usa R3F, drei, Three.js,
-GSAP o Next.js, recupera i docs della **versione installata** via Context7. La conoscenza
-di queste librerie invecchia male: le API cambiano tra minor release e l'errore tipico è
-scrivere codice plausibile che fallisce a runtime. Non scrivere `<Canvas>` a memoria.
+- **Token**: `DESIGN.md` decide, `design-tokens.ts` deriva. Mai un valore in due posti.
+- **Motion**, in quest'ordine, senza mescolare: `rules/motion.md` (vince) → skill
+  **motion-design** (cosa animare, in fase di piano) → skill **gsap-\*** (come, in build).
+  `animate.md` di Impeccable rileva slop, non detta coreografia.
+- **API**: prima di scrivere R3F, drei, Three.js, GSAP, Next.js → docs della versione
+  installata via **Context7**. Mai `<Canvas>` a memoria.
 
 ## 4. Workflow — non saltare passaggi
 
-```
-brief → piano di design → APPROVAZIONE → build → visual check → audit → preview
-```
+`brief → piano/mockup → APPROVAZIONE → build → visual check → audit → preview`
 
-1. **Brief.** Le domande della sezione 5, tutte, prima di ogni altra cosa. Se manca una
-   risposta essenziale, fermati e dillo. Non inventarla in silenzio.
-2. **Piano di design.** `/impeccable shape` per la struttura, poi la direzione visiva:
-   palette con nomi, font con ruoli precisi, e **l'elemento firma** — la cosa per cui
-   questa pagina verrà ricordata. Rileggi il piano: è specifico di *questo* brief?
-3. **Approvazione.** Il piano si mostra prima di costruire. Non si costruisce e basta.
-4. **Build.** Segui il piano. Ogni valore deriva dai token, mai hardcoded nel componente.
-   Il detector di Impeccable gira da solo a ogni Edit: se segnala, correggi subito.
-5. **Visual check.** `pnpm shots` — cattura 390 / 768 / 1440 / 1920 in `.shots/<timestamp>/`.
-   Con una scena 3D in pagina serve `pnpm shots --gpu`, altrimenti il canvas esce nero.
-   Poi **guarda le immagini**. Critica quello che vedi, non quello che intendevi.
-   Lo script segnala anche errori di console e richieste fallite: un layout rotto è spesso
-   un font che non carica, non un problema di CSS.
-6. **Audit.** `/impeccable critique` per la revisione visiva, `/impeccable audit` per la
-   qualità tecnica. Poi i cancelli della sezione 6, che sono nostri.
+1. **Brief.** Le domande di §5, tutte, prima di tutto. Se manca l'essenziale, fermati.
+2. **Piano.** `/impeccable shape` per la struttura. **Home o pagina dove il design è il
+   punto** → non un piano a parole ma **due mockup a concept opposti** (`rules/mockup-flow.md`):
+   si sceglie guardando. Pagine secondarie → piano scritto: palette, font con ruoli, elemento
+   firma. Specifico di *questo* brief?
+3. **Approvazione.** Il piano/mockup si mostra prima di costruire.
+4. **Build.** Ogni valore dai token, mai hardcoded. Il detector Impeccable gira a ogni Edit.
+5. **Visual check.** `pnpm shots` (con 3D: `--gpu`). Poi **apri ogni PNG e analizzalo
+   come immagine** — non basta produrlo, va guardato: è l'unico modo per criticare quello
+   che c'è davvero e non quello che intendevi. Critica specifica coi numeri ("titolo 32px,
+   il piano dice 24"; "gap 16, deve essere 24") → correggi → ricattura. Almeno due round;
+   ci si ferma quando non restano differenze dal piano.
+6. **Audit.** `/impeccable critique` + `/impeccable audit`. Poi i cancelli di §6.
 
 ## 5. Domande da fare subito — il progetto non parte senza
 
-Se manca qualcosa, dillo esplicitamente e **fermati**: sono tutte cose che, se arrivano a
-metà progetto, costringono a rifare il lavoro.
+Se manca qualcosa, dillo e **fermati**: se arriva a metà progetto, si rifà il lavoro.
 
-**Metà strategica → la copre `/impeccable init`**
-Pubblico, scopo, positioning, personalità di marca, anti-reference, accessibilità, CTA.
-Non ripetere quelle domande qui: lancia `init` e lascia che le faccia lui, meglio.
+**Strategia** (pubblico, scopo, positioning, marca, anti-reference, CTA) → la copre
+`/impeccable init`. Non ripeterla qui.
 
-**Metà operativa e legale → nostra, e Impeccable non la conosce**
+**Operativa e legale** (nostra, Impeccable non la conosce):
+- Logo vettoriale, non PNG.
+- Font con **licenza web valida** (il `.ttf` non è una licenza). Se manca → preventivo o open.
+- Testi e foto **definitivi prima del layout**. Mai costruire su lorem ipsum.
+- *Configuratori*: file CAD; elenco varianti reali; **regole di combinazione** (quali
+  varianti sono incompatibili — determina metà dell'architettura, chiedilo sempre).
+- Chi gestirà i contenuti dopo; domini/DNS e accessi; cookie/privacy/accessibilità PA.
 
-*Identità*
-- Logo vettoriale (SVG o AI). Non un PNG.
-- Font **con licenza web valida**. Il `.ttf` scaricato non è una licenza: le foundry
-  vendono a pageview e su un sito aziendale l'esposizione legale è reale. Se manca, va a
-  preventivo o si sceglie un'alternativa open.
+**Setup del progetto** → `rules/project-setup.md`: dove vive il repo, chi possiede
+l'organizzazione, privato/pubblico, materiali del cliente.
 
-*Contenuti*
-- Testi e foto definitivi **prima del layout**. Il lorem ipsum sostituito a fine progetto
-  rompe ogni volta tipografia e griglia. Se non ci sono, proponi tu i testi e falli
-  approvare — ma non costruire su testo finto.
+## 6. Budget — cancelli, non diagnosi
 
-*Solo per i configuratori*
-- File CAD del prodotto (STEP, IGES, SolidWorks). Se non esiste serve un 3D artist: è un
-  costo, va detto prima, non assorbito.
-- Elenco completo delle varianti reali (materiali, finiture, dimensioni, colori).
-- **Regole di combinazione**: quali varianti sono incompatibili tra loro. Lo dimentica ogni
-  cliente e determina metà dell'architettura dello stato — chiedilo sempre, esplicitamente.
+Un numero sforato **impedisce la consegna**. Non si consegna e si spiega dopo.
 
-*Tecnico e legale*
-- Chi gestirà i contenuti dopo la consegna, e con che competenze?
-- Domini, DNS, e chi ha gli accessi.
-- Cookie banner, privacy, accessibilità obbligatoria (PA e grandi imprese).
-
-## 6. Budget non negoziabili
-
-**Questi sono cancelli, non diagnosi.** Gli strumenti di audit riportano numeri; qui un
-numero sforato *impedisce la consegna*. È la differenza tra sapere come stai e non poter
-consegnare male.
-
-- LCP < 2.5s su 4G simulata, mobile
-- CLS < 0.1
-- INP < 200ms
-- JS iniziale < 180 kB gzip **escluso il bundle 3D**
-- Bundle 3D caricato in lazy, mai nel first load
+- LCP < 2.5s (4G mobile) · CLS < 0.1 · INP < 200ms
+- JS iniziale < 180 kB gzip **escluso il bundle 3D** (3D sempre lazy, mai nel first load)
 - Lighthouse: Performance ≥ 90 mobile, Accessibility 100
 
-**Dove si misura.** I numeri che finiscono in un report al cliente arrivano **solo** dallo
-script CLI (`scripts/shots.mts`): profilo Chromium pulito, nessuna estensione, throttling
-dichiarato. Mai dal browser personale — le estensioni gonfiano l'LCP anche di 5x e
-producono insight fantasma. L'MCP `chrome-devtools` serve per **guardare** (screenshot,
-ispezione, debug interattivo), non per misurare.
+I numeri per il cliente vengono **solo** da `scripts/shots.mts` (Chromium pulito), mai dal
+browser personale. L'MCP `chrome-devtools` serve per guardare, non per misurare. Lab dice
+*perché*, campo (CrUX) dice *quanto conta*: si leggono insieme.
 
-**Lab e campo si leggono insieme.** Il dato lab dice *perché*, il campo (CrUX) dice
-*quanto conta*. Lab pessimo + campo buono = problema della macchina di test. Il contrario
-= problema vero che il tuo hardware sta nascondendo.
+## 7. 3D e video-scroll
 
-## 7. 3D — regole di sopravvivenza
+Dettaglio in `rules/webgl.md` (scene e configuratori) e `rules/scroll-frames.md` (video su
+scroll). Le regole di quei file vincono anche su una futura skill: sono tarate sui nostri
+budget. In sintesi, non negoziabile:
 
-Queste regole valgono comunque, anche se una skill sul 3D dicesse altro: sono tarate sui
-nostri budget e sui nostri clienti.
-
-- **Mai 3D bloccante above-the-fold.** Sempre poster statico + `<Suspense>`, la scena
-  entra quando è pronta.
-- **Budget asset**: modello < 2 MB compresso, texture max 2048², KTX2 obbligatorio.
-- **Degrado esplicito**: se il device non regge (WebGL assente, `deviceMemory` basso,
-  mobile di fascia bassa), si serve la versione statica. La pagina deve funzionare al 100%
-  senza WebGL — contenuti, form e conversioni non dipendono mai dal canvas.
-- **60 fps desktop, 30 fps floor mobile.** Se non ci arrivi, semplifica la scena, non
-  sperare che passi.
-- `prefers-reduced-motion` ferma le animazioni ambientali, sempre.
-- **Configuratori**: lo stato delle varianti sta nell'URL (condivisibile, indicizzabile),
-  le varianti si precaricano, il cambio materiale è istantaneo — nessun re-mount della scena.
-
-**Screenshot e fps delle scene 3D.** Chromium headless renderizza WebGL via SwiftShader,
-cioè in software: le immagini escono, ma gli fps non hanno alcun rapporto con la realtà.
-Quindi screenshot con `channel: 'chrome'` (GPU reale, stessa versione dei clienti), e
-misura degli fps **solo** su browser reale. Un fps rilevato in headless non va mai in un
-report.
+- Mai 3D/canvas bloccante above-the-fold: poster statico + lazy, entra quando è pronto.
+- La pagina funziona al **100% senza WebGL/JS**: contenuti, form e conversioni mai dipendenti dal canvas.
+- Budget asset: modello < 2 MB, texture ≤ 2048² KTX2. 60 fps desktop / 30 floor mobile.
+- `prefers-reduced-motion` → versione statica, sempre. Loop fermo se il tab non è visibile.
+- Configuratori: stato nell'URL, varianti precaricate, cambio istantaneo senza re-mount.
+- Screenshot canvas: `--gpu`. fps misurati **solo** su browser reale, mai in headless.
 
 ## 8. Copy
 
-Copy in **italiano** salvo indicazione contraria; se il sito è bilingue, `hreflang`
-corretto e traduzioni vere, mai automatiche non riviste. Un bottone dice cosa succede:
-"Richiedi il preventivo", non "Invia" — e l'azione mantiene lo stesso nome per tutto il
-flusso. Per il resto (chiarezza, gerarchia, microcopy) usa `/impeccable clarify`.
+Italiano salvo indicazione; se bilingue, `hreflang` corretto e traduzioni vere. Un bottone
+dice cosa fa ("Richiedi il preventivo", non "Invia"), stesso nome per tutto il flusso. Il
+resto → `/impeccable clarify`.
 
 ## 9. Quando leggere cosa
 
-Non caricare tutto. Apri il file solo quando entri in quella fase:
-
 | Fase | Dove |
 |---|---|
-| Direzione visiva, critica, audit | comandi `/impeccable` |
+| Direzione, critica, audit | comandi `/impeccable` |
+| Home / design forte | `rules/mockup-flow.md` |
 | Token del progetto | `DESIGN.md` |
-| Qualsiasi cosa con `<Canvas>` | `rules/webgl.md` |
-| Coreografia delle animazioni | `rules/motion.md` → skill `motion-design` |
-| API di animazione | skill `gsap-*`, via Context7 per la versione |
-| Scrittura componenti | `rules/code-style.md` |
-| Consegna al cliente | `rules/client-handoff.md` |
+| `<Canvas>` / scene 3D | `rules/webgl.md` |
+| Video su scroll | `rules/scroll-frames.md` |
+| Coreografia motion | `rules/motion.md` → skill `motion-design` |
+| API animazione | skill `gsap-*` (versione via Context7) |
+| Nuovo progetto, setup | `rules/project-setup.md` |
+| Consegna | `rules/client-handoff.md` *(da scrivere)* |
 
-## 10. Cosa non fare mai
+## 10. Mai
 
-- Partire senza le risposte della sezione 5
-- Costruire prima di aver mostrato il piano di design
-- Definire un token fuori da `DESIGN.md`
-- Aggiungere una dipendenza senza chiedere
-- Committare chiavi, token o credenziali. Stanno in `.env.local` (nel `.gitignore`) o nella
-  config utente fuori dal repo — **mai** in `.mcp.json`, `settings.json` o in un file che
-  finisce sotto git. Se un MCP vuole una chiave in chiaro, va configurato a livello utente,
-  non di progetto
-- Consegnare senza aver guardato gli screenshot
-- Modificare `main` direttamente: si lavora su branch, il cliente approva sul preview URL
+- Partire senza le risposte di §5, o costruire prima del piano/mockup approvato.
+- Definire un token fuori da `DESIGN.md`. Aggiungere una dipendenza senza chiedere.
+- Committare chiavi: stanno in `.env.local` o config utente, **mai** in `.mcp.json`,
+  `settings.json` o sotto git. MCP che vuole una chiave → livello utente, non progetto.
+- Consegnare senza aver guardato gli screenshot.
+- Toccare `main` direttamente: si lavora su branch, il cliente approva sul preview URL.
 - Trattare un budget sforato come un'osservazione. È un cancello: si chiude.
 
 ---
-
-*Da tenere allineato ogni volta che cambia una regola in `rules/` o in `DESIGN.md`.*
+*Allineare a ogni cambio in `rules/` o `DESIGN.md`.*
