@@ -119,6 +119,11 @@ async function capture(browser: Browser, vp: Viewport) {
     }
   }, SCROLL_STEP_MS);
 
+  // `animations: 'disabled'` ferma il CSS, non GSAP né i loop di render: lo
+  // stato finale deterministico lo dà la pagina (rules/motion.md §4).
+  await page.evaluate(() => (window as any).__seekAnimationsToEnd?.());
+  await page.waitForTimeout(150);
+
   const file = join(outDir, `${vp.name}.png`);
   await page.screenshot({ path: file, fullPage, animations: 'disabled' });
 

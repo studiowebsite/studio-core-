@@ -51,10 +51,13 @@ Il salto a "memorabile" è l'elemento firma (§4), dal cliente — non da questa
 | Motion | GSAP + ScrollTrigger, Lenis, Framer Motion (micro-interazioni) |
 | 3D | React Three Fiber + drei; Theatre.js per animazioni scriptate |
 | Asset 3D | glTF Draco/Meshopt, texture KTX2 |
+| Pipeline asset 3D | Blender (pulizia, bake) → `@gltf-transform/cli` — obbligatoria, vedi `rules/webgl.md` §3 |
 | CMS | Sanity |
 | Deploy | Vercel, preview URL per branch |
 
 Nessuna libreria fuori lista senza chiedere: ogni dipendenza è peso che il cliente paga.
+Vale per ciò che finisce **nel bundle**; gli strumenti di build (`@gltf-transform/cli`,
+Blender) non pesano sull'utente e stanno in `devDependencies` o fuori dal progetto.
 
 - **Token**: `DESIGN.md` decide, `design-tokens.ts` deriva. Mai un valore in due posti.
 - **Motion**, in quest'ordine, senza mescolare: `rules/motion.md` (vince) → skill
@@ -113,16 +116,19 @@ browser personale. L'MCP `chrome-devtools` serve per guardare, non per misurare.
 
 ## 7. 3D e video-scroll
 
-Dettaglio in `rules/webgl.md` (scene e configuratori) e `rules/scroll-frames.md` (video su
-scroll). Le regole di quei file vincono anche su una futura skill: sono tarate sui nostri
-budget. In sintesi, non negoziabile:
+`rules/webgl.md` (scene e configuratori) e `rules/scroll-frames.md` (video su scroll) sono
+**normativi**, non approfondimenti: i budget numerici — peso asset, texture, draw call,
+fps, tetti del precarico — vivono lì e **solo lì**, come i token vivono in `DESIGN.md`.
+Non ricopiarli qui: un numero in due posti è un numero che diverge. Quelle regole vincono
+anche su una futura skill, perché sono tarate sui nostri budget.
+
+Qui resta la postura, che non cambia mai:
 
 - Mai 3D/canvas bloccante above-the-fold: poster statico + lazy, entra quando è pronto.
 - La pagina funziona al **100% senza WebGL/JS**: contenuti, form e conversioni mai dipendenti dal canvas.
-- Budget asset: modello < 2 MB, texture ≤ 2048² KTX2. 60 fps desktop / 30 floor mobile.
 - `prefers-reduced-motion` → versione statica, sempre. Loop fermo se il tab non è visibile.
 - Configuratori: stato nell'URL, varianti precaricate, cambio istantaneo senza re-mount.
-- Screenshot canvas: `--gpu`. fps misurati **solo** su browser reale, mai in headless.
+- fps **mai** misurati in headless. Soglie e metodo: `rules/webgl.md` §5 e §7.
 
 ## 8. Copy
 

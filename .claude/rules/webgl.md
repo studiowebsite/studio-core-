@@ -8,6 +8,13 @@ budget e sui nostri clienti. Per le **API** invece non fidarti di questo file n�
 memoria — recupera i docs della versione installata via Context7. R3F, drei e Three.js
 cambiano firma tra minor release.
 
+**Confine con `rules/motion.md`.** Qui c'è il **ciclo di vita** del canvas: quando entra,
+quanto pesa, quando degrada, quando si ferma. Il **modo in cui le cose si muovono** —
+coreografia, durate, easing, stagger, ingressi legati allo scroll — è di `rules/motion.md`,
+che su quello vince anche dentro una scena 3D. Se questo file dice *quando* un'animazione
+parte e `motion.md` dice *come*, hanno ragione entrambi. Se dicono cose diverse sullo
+stesso punto, vince `motion.md`.
+
 ---
 
 ## 1. La forcella: che tipo di 3D stai costruendo?
@@ -40,7 +47,8 @@ L'ordine corretto:
 1. HTML e CSS arrivano, la pagina è leggibile e navigabile
 2. Un **poster statico** occupa lo spazio del canvas — stesse dimensioni, nessun layout shift
 3. Il bundle 3D si carica in lazy, fuori dal first load
-4. La scena entra **in dissolvenza** quando è pronta, mai bruscamente
+4. La scena entra **in dissolvenza** quando è pronta, mai bruscamente — durata ed easing
+   della dissolvenza li detta `rules/motion.md` §3, non questo file
 
 Il poster non è un placeholder grigio: è un frame reale della scena, esportato dalla scena
 stessa. Se il 3D non partisse mai, quel poster deve reggere da solo.
@@ -62,9 +70,24 @@ Non negoziabili. Se non ci rientri, semplifica il modello — non chiedere derog
 |---|---|
 | Modello singolo, compresso | **< 2 MB** |
 | Texture | max 2048², **KTX2 obbligatorio** |
-| Totale scena, prima interazione | < 4 MB |
+| **Prima interazione** — scena base + variante iniziale | **< 4 MB** |
+| **Precarico varianti** — tutto il resto, dopo il primo input utile | **< 8 MB** desktop, **< 4 MB** mobile |
 | Draw call, desktop | < 100 |
 | Draw call, mobile | < 50 |
+
+**I due tetti sono separati e si misurano in momenti diversi.** È la distinzione che
+salva i configuratori: §6 impone di precaricare le varianti in background, e dieci varianti
+da 2 MB sfonderebbero i 4 MB al primo respiro se contassero nello stesso budget.
+
+- **Prima interazione** = tutto ciò che scarichi *prima* che l'utente possa toccare la
+  scena: scena base, variante iniziale, ambiente, texture visibili. È il numero che entra
+  nel budget di consegna del `CLAUDE.md` §6.
+- **Precarico varianti** = ciò che parte *dopo* il primo input utile, a rete libera, senza
+  bloccare niente. Non entra nella prima interazione, ma ha il suo tetto: oltre quello, non
+  precarichi tutto — precarichi per priorità e il resto lo scarichi a richiesta.
+
+Il tetto mobile del precarico è lo stesso di `rules/scroll-frames.md` §3, per la stessa
+ragione: su rete mobile un download in background di 8 MB si paga comunque.
 
 **Pipeline obbligatoria per ogni asset:**
 
@@ -73,8 +96,18 @@ CAD / modello → Blender (pulizia, decimazione, UV, bake) →
 gltf-transform (Draco o Meshopt + KTX2) → verifica peso → repo
 ```
 
-Nessun `.glb` entra nel progetto senza essere passato da `gltf-transform`. Gli export
-grezzi contengono sempre dati inutilizzati, normali ridondanti e texture PNG non compresse.
+Lo strumento è **`@gltf-transform/cli`** (nello stack, `CLAUDE.md` §3 — è build-time, non
+finisce nel bundle):
+
+```bash
+pnpm add -D @gltf-transform/cli     # oppure installazione globale
+```
+
+Nessun `.glb` entra nel progetto senza esserci passato. Gli export grezzi contengono sempre
+dati inutilizzati, normali ridondanti e texture PNG non compresse. Per le texture la
+compressione KTX2 passa dai comandi `uastc` (normal/ORM) ed `etc1s` (baseColor), o da
+`optimize` per una passata unica. Le firme esatte cambiano tra versioni: **recuperale via
+Context7**, non da qui.
 
 **Verifica sempre il risultato, non fidarti del comando:**
 
@@ -92,18 +125,39 @@ peggio di uno da 3 MB con 20.
 **Regola di fondo: contenuti, form e conversioni non dipendono mai dal canvas.** Se
 disattivi il 3D, il sito deve continuare a vendere.
 
-Il degrado è **esplicito e a gradini**, mai lasciato al caso:
+Il degrado è **esplicito e a gradini**, mai lasciato al caso. Ogni gradino ha una
+condizione che sai rilevare davvero:
 
-| Condizione | Cosa servi |
-|---|---|
-| WebGL assente o context lost | versione statica completa |
-| `deviceMemory` basso, mobile di fascia bassa | poster + eventuale video loop |
-| `prefers-reduced-motion` | scena ferma, nessuna animazione ambientale |
-| Batteria in risparmio energetico | frame rate ridotto o scena ferma |
-| Tab non visibile | **loop di render fermo** |
+| Condizione | Come la rilevi | Cosa servi |
+|---|---|---|
+| WebGL assente, o contesto perso | creazione del contesto fallita, evento `webglcontextlost` | versione statica completa |
+| `prefers-reduced-motion` | media query — affidabile su tutti i browser | scena ferma, nessuna animazione ambientale |
+| Tab non visibile | evento `visibilitychange` | **loop di render fermo** |
+| **fps sotto soglia per 3s** | media mobile misurata nel loop | **gradino 1**: taglia postprocessing → ombre dinamiche → `devicePixelRatio` |
+| **fps ancora sotto dopo il taglio** | stessa misura, altri 3s | **gradino 2**: smonta il canvas, servi poster o video loop |
 
-L'ultima è quella che dimenticano tutti: una scena che continua a girare in un tab di
-sfondo consuma batteria e CPU per niente. Sospendi il loop quando la pagina non è visibile.
+**Soglia di runtime: sotto 45 fps desktop / 24 fps mobile, media su 3 secondi.** Non
+confonderla col pavimento di §5 (60/30): quello è un **obiettivo di progetto** — se non ci
+arrivi in sviluppo, semplifichi la scena prima di consegnare. Questa è invece la soglia a
+cui la pagina **si difende da sola** su un device che non ce la fa. Una scena a 55 fps non
+deve degradare: deve essere sistemata da te.
+
+La media su 3 secondi non è un dettaglio: senza finestra temporale, un singolo frame lungo
+— una GC, un cambio di tab, un'altra app che si sveglia — farebbe collassare la scena per
+niente. E il degrado è **a senso unico**: una volta sceso di gradino non risalire
+automaticamente, o l'utente vede la scena che pulsa tra due qualità.
+
+**Perché la misura e non la capability.** `navigator.deviceMemory` esiste solo su Chromium:
+su iOS Safari — cioè dove la memoria bassa uccide davvero la tab — non risponde. La Battery
+Status API è anch'essa solo Chromium, e non espone affatto il concetto di "risparmio
+energetico": quella modalità, su iOS, dal web non è rilevabile. Un gradino agganciato a
+quelle due API non scatta mai dove servirebbe di più. Gli fps invece si misurano ovunque, e
+misurano la cosa giusta: non quanto è potente il device sulla carta, ma se **questa** scena
+su **questo** device sta reggendo adesso.
+
+La riga del tab è quella che dimenticano tutti: una scena che continua a girare in un tab di
+sfondo consuma batteria e CPU per niente. Sospendi il loop quando la pagina non è visibile —
+ed è anche il modo corretto di rispondere al risparmio energetico, senza doverlo rilevare.
 
 **Gestisci il context lost.** Il browser può revocare il contesto WebGL in qualsiasi
 momento (memoria, driver, sospensione). Se non lo intercetti, l'utente resta con un
@@ -117,9 +171,9 @@ rettangolo nero. Ascolta l'evento e ripiega sul poster.
 - Se il frame rate non regge, il primo intervento è **ridurre draw call e complessità
   della scena**, non alzare le speranze. In ordine: unisci mesh, usa instancing, abbassa
   le texture, riduci le luci dinamiche, taglia il postprocessing.
-- **Nessuna allocazione nel loop di render.** Niente oggetti nuovi, niente array, niente
-  closure dentro il frame: il garbage collector produce jank periodico che sembra un
-  problema di scena e non lo è.
+- **Nessuna allocazione nel loop di render** — vedi `rules/motion.md` §3. In un
+  configuratore il costo si somma al leak di disposal qui sotto: due fonti diverse dello
+  stesso sintomo, un frame rate che degrada con l'uso.
 - **Postprocessing con parsimonia.** Ogni passata è un render a schermo intero. Su mobile,
   di norma, zero.
 - **Ombre**: preferisci il bake a quelle dinamiche. Un'ombra dinamica costa quanto un
@@ -176,14 +230,10 @@ escono, ma sono lente e gli fps non hanno alcun rapporto con la realtà.
 
 Un fps rilevato in headless **non entra mai in un report al cliente**.
 
-**Progetta le animazioni perché siano fotografabili.** `animations: 'disabled'` di
-Playwright ferma le animazioni CSS ma **non tocca GSAP, ScrollTrigger o il loop di
-render**. Se non prevedi un modo per portare la scena a uno stato finale deterministico,
-non potrai mai catturarla in modo ripetibile.
-
-Esponi un hook di debug — una funzione globale che porta timeline e trigger allo stato
-finale e ferma il loop — e chiamala dallo script prima dello screenshot. Costa una riga se
-lo decidi all'inizio, è una rifattorizzazione se te ne accorgi dopo.
+**Lo stato finale deterministico è di `rules/motion.md` §4** — vale per ogni animazione
+JS, non solo per il canvas. Il caso specifico qui è SwiftShader: anche a scena ferma,
+l'immagine headless è resa in software, quindi va bene per il layout ma non per giudicare
+qualità o nitidezza del render — per quello serve comunque `--gpu`.
 
 **Testa su device veri.** Un iPhone di tre anni fa e un Android di fascia media sono il
 pubblico reale. Il tuo portatile non è un test.
@@ -195,8 +245,12 @@ pubblico reale. Il tuo portatile non è un test.
 - [ ] Il bundle 3D non compare nel first load
 - [ ] La pagina funziona al 100% con WebGL disattivato
 - [ ] Poster statico presente, stesse dimensioni del canvas, nessun layout shift
-- [ ] Ogni asset passato da `gltf-transform`, verificato con `inspect`
+- [ ] Ogni asset passato da `@gltf-transform/cli`, verificato con `inspect`
+- [ ] I due tetti di §3 contati separatamente: prima interazione < 4 MB, precarico varianti
+      entro il suo, e nessuna variante precaricata conteggiata nella prima interazione
 - [ ] 60 fps desktop / 30 fps mobile, misurati su device reale
+- [ ] Gradini di degrado fps implementati e **provati davvero**: scende di gradino sotto
+      soglia, non risale da solo, non collassa per un frame lungo isolato
 - [ ] Loop fermo quando il tab non è visibile
 - [ ] `prefers-reduced-motion` rispettato
 - [ ] Context lost gestito
