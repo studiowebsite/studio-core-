@@ -1,3 +1,12 @@
 * text=auto eol=lf
 *.mts text eol=lf
 *.sh text eol=lf
+
+# Archivio sorgente del cliente: sta in LFS, non viene mai deployato.
+# LFS è volutamente limitato a materiali/ — gli asset di public/ restano blob
+# normali, così il deploy non dipende dal checkout LFS.
+materiali/** filter=lfs diff=lfs merge=lfs -text
+
+# ...tranne la documentazione dell'archivio, che resta testo leggibile in diff.
+materiali/*.md    -filter -diff -merge text eol=lf
+materiali/**/*.md -filter -diff -merge text eol=lf
