@@ -8,26 +8,46 @@ Ogni riga di questo file è una cosa che abbiamo sbagliato o improvvisato almeno
 
 ---
 
-## 1. Un repo per cliente, fuori da studio-core
+## 1. Repo cliente in `studio-core/sites/<cliente>/`, autonomo per copia
 
 `studio-core` è la **base riutilizzabile** dello studio: metodo, regole, script, libreria di
-riferimenti. Non contiene il lavoro dei clienti.
+riferimenti.
 
-Ogni cliente è un **repo suo**, che parte da una copia di studio-core:
+Ogni cliente vive in `studio-core/sites/<cliente>/`. Non eredita nulla per risalita —
+niente symlink, niente riferimento al parent: alla creazione si **copia dentro**
+`CLAUDE.md`, `.claude/` e `scripts/`, poi si inizializza lì un repo git proprio:
 
 ```bash
-# dalla home, non dentro studio-core
-mkdir ~/<cliente> && cd ~/<cliente>
-cp ~/studio-core/CLAUDE.md .
-cp -r ~/studio-core/.claude .
-cp -r ~/studio-core/scripts .
-cp ~/studio-core/.gitignore ~/studio-core/.gitattributes .
+# dentro studio-core
+mkdir -p sites/<cliente> && cd sites/<cliente>
+cp ../../CLAUDE.md .
+cp -r ../../.claude .
+cp -r ../../scripts .
+cp ../../.gitignore ../../.gitattributes .
 git init
 ```
 
-**Perché separato e non un monorepo:** storia git pulita, accessi isolati, consegnabile a
-fine progetto. Con un monorepo non puoi dare accesso a un cliente o a un collaboratore
-senza dargli *tutto* — il tuo metodo e gli altri clienti inclusi. Non recuperabile dopo.
+**Perché sotto `studio-core` invece che un repo indipendente fin da subito:** si lavora da
+soli, su un solo PC — tenerli sotto la stessa radice è comodo (un editor aperto, un `cd` per
+passare da un cliente all'altro, la libreria di riferimenti a portata di mano). Non è un
+compromesso sull'isolamento, perché quello che conta è già garantito da altro:
+- **git è separato per cliente** — `git init` proprio dentro `sites/<cliente>/`, non un
+  submodule né una cartella dentro la storia di `studio-core`;
+- **il lockfile è proprio** (§4) — le dipendenze del cliente non vivono nel lockfile della
+  base.
+
+Con questi due, la cartella condivisa non è il monorepo che preoccupava: non c'è una storia
+git comune da cui un cliente potrebbe finire per vedere il lavoro di un altro.
+
+**Quando si consegna al cliente, o si dà accesso a un collaboratore esterno — allora, non
+prima — si estrae `sites/<cliente>/` fuori da `studio-core`.** Due strade:
+- `git filter-repo` (o `filter-branch`) sulla history di `sites/<cliente>/`, se serve
+  preservare i commit così com'è;
+- altrimenti, più semplice: `mv sites/<cliente> ~/<cliente>` e `git remote add origin` +
+  push. Si perde la storia locale pre-estrazione, ma per una consegna spesso è accettabile.
+
+Finché il lavoro resta interno, `sites/<cliente>/` dentro `studio-core` è la posizione
+normale del progetto — non uno stato provvisorio da correggere prima del tempo.
 
 **Nome della cartella e del repo: senza spazi.** `re-del-sole`, non `Re del Sole`. Gli spazi
 nei path rompono script, CLI e URL. Il nome leggibile va nel README, non nel filesystem.
@@ -70,15 +90,22 @@ edita.
 
 ## 4. Lockfile e autonomia
 
-Un repo cliente separato deve avere il **suo** `pnpm-lock.yaml`. Se è nato dentro il
-workspace di studio-core, le sue dipendenze vivevano nel lockfile della base — e chi clona,
-o Vercel al deploy, trova un `package.json` senza lockfile: l'install non è riproducibile e
-si manifesta come "in locale va, in preview no".
+Il repo cliente nasce **già con il suo lockfile**: appena creato in `sites/<cliente>/`
+(§1), si lancia lì `pnpm install` — subito, non "alla separazione". Con `sites/<cliente>/`
+già un repo git a sé, e senza un `packages:` che lo aggreghi al workspace di studio-core,
+non c'è nessuna separazione futura da cui far dipendere questo passo.
 
-Alla separazione: togli il cliente dal `pnpm-workspace.yaml` di studio-core, sposta nel
-progetto la config `allowBuilds` che era nella radice, poi `pnpm install` dentro il repo
-cliente per generare il suo lockfile. La config pnpm ha cambiato nome tra le release →
-verificala via Context7, non a memoria.
+Perché non è rimandabile: se le dipendenze del cliente restassero anche solo per un po'
+senza un `pnpm-lock.yaml` proprio, finirebbero implicitamente risolte contro il lockfile
+della base — e chi apre `sites/<cliente>/` da solo, o Vercel al deploy, troverebbe un
+`package.json` senza lockfile: l'install non è riproducibile, e si manifesta come "in
+locale va, in preview no".
+
+Se `pnpm install` chiede l'approvazione per pacchetti con build script nativi (`sharp`,
+`@swc/core`, `@parcel/watcher`...), la lista va in `allowBuilds` dentro il
+`pnpm-workspace.yaml` **del cliente** — non in quello di studio-core: ogni progetto
+approva i propri. La config pnpm ha cambiato nome tra le release → verificala via
+Context7, non a memoria.
 
 ## 5. Online — GitHub e Vercel
 
@@ -112,12 +139,18 @@ invece che al brief, il metodo ha fatto tardi.
 
 ## 7. Checklist di nascita
 
-- [ ] Repo cliente separato, fuori da studio-core, nome senza spazi
+- [ ] Repo cliente in `sites/<cliente>/`, con `.git` e lockfile propri, nome senza spazi
 - [ ] Config di studio-core copiata (CLAUDE.md, .claude/, scripts/, .gitignore, .gitattributes)
 - [ ] DESIGN.md e PRODUCT.md nel repo del cliente
 - [ ] materiali/ e public/ separati; LFS solo su materiali/
-- [ ] Lockfile proprio generato; progetto fuori dal workspace di studio-core
+- [ ] `pnpm install` lanciato súbito dentro `sites/<cliente>/`, non rimandato (§4)
 - [ ] Repo GitHub privato, nell'organizzazione dello studio
 - [ ] LFS verificato dopo il push (file veri, non puntatori)
 - [ ] Diritti sui contenuti confermati prima di qualsiasi deploy pubblico
 - [ ] studio-core torna pulito: non ha committato niente del cliente
+
+**Il giorno dell'estrazione** (consegna al cliente, o accesso a un collaboratore esterno —
+non alla nascita, vedi §1):
+
+- [ ] `sites/<cliente>/` estratto fuori da `studio-core` (`git filter-repo` sulla history,
+      oppure `mv` + nuovo `git remote add origin`)
