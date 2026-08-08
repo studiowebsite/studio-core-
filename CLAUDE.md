@@ -53,6 +53,7 @@ Il salto a "memorabile" è l'elemento firma (§4), dal cliente — non da questa
 | Asset 3D | glTF Draco/Meshopt, texture KTX2 |
 | Pipeline asset 3D | Blender (pulizia, bake) → `@gltf-transform/cli` — obbligatoria, vedi `rules/webgl.md` §3 |
 | CMS | Sanity |
+| i18n (se bilingue) | next-intl |
 | Deploy | Vercel, preview URL per branch |
 
 Nessuna libreria fuori lista senza chiedere: ogni dipendenza è peso che il cliente paga.
@@ -84,7 +85,8 @@ Blender) non pesano sull'utente e stanno in `devDependencies` o fuori dal proget
    ci si ferma quando non restano differenze dal piano.
 6. **Audit.** `/impeccable critique` + `/impeccable audit`, poi skill `privacy-check`
    (trattamenti dati, cookie, consenso — non sostituisce §5, li verifica su codice e sito
-   vivo). Poi i cancelli di §6.
+   vivo). Poi i cancelli di §6. `rules/pre-delivery-checklist.md` è l'indice di tutti questi
+   cancelli in un solo posto — si spunta prima di passare al preview.
 
 ## 5. Domande da fare subito — il progetto non parte senza
 
@@ -99,6 +101,13 @@ Se manca qualcosa, dillo e **fermati**: se arriva a metà progetto, si rifà il 
 - Testi e foto **definitivi prima del layout**. Mai costruire su lorem ipsum.
 - *Configuratori*: file CAD; elenco varianti reali; **regole di combinazione** (quali
   varianti sono incompatibili — determina metà dell'architettura, chiedilo sempre).
+- Form di contatto/preventivo: dove devono arrivare le richieste (email diretta? un CRM
+  che già usano?) — vedi `rules/forms.md`.
+- Se bilingue: chi fornisce le traduzioni e chi le rivede prima che vadano online — vedi §8.
+- Termini di pagamento legati alle fasi del workflow (es. acconto all'approvazione del
+  piano/mockup, saldo alla consegna) — concordati e scritti **prima** di iniziare il build,
+  non durante. Non è un cancello tecnico di questo file, ma se manca e il cliente sparisce
+  a metà, il lavoro fatto (brief, piano, mockup) non ha copertura.
 - Chi gestirà i contenuti dopo; domini/DNS e accessi; cookie/privacy/accessibilità PA.
 
 **Setup del progetto** → `rules/project-setup.md`: dove vive il repo, chi possiede
@@ -127,16 +136,28 @@ anche su una futura skill, perché sono tarate sui nostri budget.
 Qui resta la postura, che non cambia mai:
 
 - Mai 3D/canvas bloccante above-the-fold: poster statico + lazy, entra quando è pronto.
-- La pagina funziona al **100% senza WebGL/JS**: contenuti, form e conversioni mai dipendenti dal canvas.
+- La pagina funziona al **100% senza WebGL/JS**: contenuti, form e conversioni mai
+  dipendenti dal canvas — la stessa garanzia protegge anche l'indicizzazione, vedi
+  `rules/seo.md` §4.
 - `prefers-reduced-motion` → versione statica, sempre. Loop fermo se il tab non è visibile.
 - Configuratori: stato nell'URL, varianti precaricate, cambio istantaneo senza re-mount.
 - fps **mai** misurati in headless. Soglie e metodo: `rules/webgl.md` §5 e §7.
 
 ## 8. Copy
 
-Italiano salvo indicazione; se bilingue, `hreflang` corretto e traduzioni vere. Un bottone
-dice cosa fa ("Richiedi il preventivo", non "Invia"), stesso nome per tutto il flusso. Il
-resto → `/impeccable clarify`.
+Italiano salvo indicazione. Se il progetto è bilingue:
+
+- **next-intl** (§3) è la libreria di riferimento: routing con prefisso di lingua
+  (`/it/...`, `/en/...`), `generateMetadata` per `hreflang` corretto pagina per pagina —
+  vedi anche `rules/seo.md` per canonical e metadata.
+- **Traduzioni vere, mai automatiche non riviste.** Una traduzione automatica scorretta è
+  visibile quanto un font sbagliato su un sito "su misura". Chi la fornisce e chi la
+  rivede si decide al brief (§5), non si improvvisa in build.
+- Lo **switcher di lingua resta sulla pagina corrente**, cambiando solo la lingua — non
+  riporta alla home.
+
+Un bottone dice cosa fa ("Richiedi il preventivo", non "Invia"), stesso nome per tutto il
+flusso. Il resto → `/impeccable clarify`.
 
 ## 9. Quando leggere cosa
 
@@ -150,8 +171,11 @@ resto → `/impeccable clarify`.
 | Coreografia motion | `rules/motion.md` → skill `motion-design` |
 | API animazione | skill `gsap-*` (versione via Context7) |
 | Nuovo progetto, setup | `rules/project-setup.md` |
+| SEO, di default per ogni progetto | `rules/seo.md` |
+| Form di contatto/preventivo | `rules/forms.md` |
 | Trattamenti dati, prima della consegna | skill `privacy-check` |
-| Consegna | `rules/client-handoff.md` *(da scrivere)* |
+| Cancelli aggregati, prima del preview | `rules/pre-delivery-checklist.md` |
+| Consegna | `rules/client-handoff.md` |
 
 ## 10. Mai
 

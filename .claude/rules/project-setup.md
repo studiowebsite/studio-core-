@@ -24,8 +24,14 @@ cp ../../CLAUDE.md .
 cp -r ../../.claude .
 cp -r ../../scripts .
 cp ../../.gitignore ../../.gitattributes .
+mkdir -p .github/workflows && cp .claude/templates/ci.yml .github/workflows/ci.yml
 git init
 ```
+
+Il template CI copiato in `.github/workflows/ci.yml` gira solo dopo il primo push (§5):
+lint e build a ogni push, l'unico cancello che non dipende dal ricordarsi di lanciarlo a
+mano. Non sostituisce niente di `rules/pre-delivery-checklist.md` — copre l'automatizzabile,
+quel file resta per tutto ciò che richiede un giudizio o una misura reale.
 
 **Perché sotto `studio-core` invece che un repo indipendente fin da subito:** si lavora da
 soli, su un solo PC — tenerli sotto la stessa radice è comodo (un editor aperto, un `cd` per
@@ -48,6 +54,23 @@ prima — si estrae `sites/<cliente>/` fuori da `studio-core`.** Due strade:
 
 Finché il lavoro resta interno, `sites/<cliente>/` dentro `studio-core` è la posizione
 normale del progetto — non uno stato provvisorio da correggere prima del tempo.
+
+**Le correzioni a `rules/` non tornano indietro sui progetti già copiati — è una scelta,
+non una svista.** La stessa copia che garantisce l'isolamento (git e lockfile propri, sopra)
+taglia anche il canale che farebbe arrivare un fix a un progetto già avviato: non c'è
+symlink, quindi non c'è propagazione automatica. Il metodo dello studio è **correggere in
+avanti**: un bug scoperto in `rules/motion.md` si sistema in `studio-core`, e da lì in poi
+protegge ogni nuovo cliente — non si riapre un `sites/<cliente>/` già consegnato per
+applicarlo a ritroso. Un progetto chiuso resta con le regole che aveva quando è stato
+consegnato; rifarlo per una regola che il cliente non ha chiesto è lavoro non pagato su
+un'approvazione già ottenuta.
+
+Per un progetto ancora **in build** (non consegnato, sopra) è diverso: se durante la build
+arriva un fix rilevante in `studio-core`, un resync mirato è legittimo — si ricopia
+`.claude/` e/o `scripts/` dentro `sites/<cliente>/`, mai l'inverso. Ma è manuale e
+deliberato, mai automatico: dopo un resync, va riguardato cosa nel progetto dipendeva dalla
+regola cambiata (una modifica a `rules/motion.md` a metà build richiede di riguardare le
+animazioni già scritte, non solo di aggiornare il file).
 
 **Nome della cartella e del repo: senza spazi.** `re-del-sole`, non `Re del Sole`. Gli spazi
 nei path rompono script, CLI e URL. Il nome leggibile va nel README, non nel filesystem.
@@ -87,6 +110,20 @@ edita.
 - Il `README.md` in `materiali/` resta in git normale, leggibile nel diff.
 - Attenzione alla quota LFS gratuita di GitHub (1 GB storage + 1 GB banda/mese). Ogni
   ri-export di un video è una versione nuova che si **somma**, non sostituisce.
+
+**Se ti avvicini o superi la quota**, in ordine:
+1. **Prevenire prima di curare.** Su LFS finisce solo l'export **finale approvato** di un
+   video — le versioni di lavorazione restano fuori da git (locali, o in uno storage
+   temporaneo) finché non sono quella buona. È la causa più comune di quota sforata: non
+   video diversi, ma dieci ri-export dello stesso.
+2. **Prima di agire, guarda cosa la consuma davvero** (`git lfs ls-files -s`, o l'uso
+   mostrato da GitHub): spesso è un solo file pesante, non l'insieme.
+3. **Se serve più spazio sullo stesso repo**, il data pack a pagamento di GitHub è la strada
+   più semplice: costa, ma non tocca la history.
+4. **Riscrivere la history per togliere versioni superate** (`git lfs prune` per la cache
+   locale; `git filter-repo` per toglierle davvero dal remoto) è l'**ultima risorsa** —
+   cambia gli hash dei commit. Va fatto solo se il repo non è ancora stato dato in accesso a
+   nessuno (mai su un repo già condiviso con un collaboratore o col cliente, vedi §1).
 
 ## 4. Lockfile e autonomia
 
@@ -141,6 +178,7 @@ invece che al brief, il metodo ha fatto tardi.
 
 - [ ] Repo cliente in `sites/<cliente>/`, con `.git` e lockfile propri, nome senza spazi
 - [ ] Config di studio-core copiata (CLAUDE.md, .claude/, scripts/, .gitignore, .gitattributes)
+- [ ] `.github/workflows/ci.yml` copiato dal template e verificato in verde dopo il primo push
 - [ ] DESIGN.md e PRODUCT.md nel repo del cliente
 - [ ] materiali/ e public/ separati; LFS solo su materiali/
 - [ ] `pnpm install` lanciato súbito dentro `sites/<cliente>/`, non rimandato (§4)

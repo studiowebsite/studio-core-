@@ -215,6 +215,30 @@ opzione disabilitata con motivo leggibile. Non un errore dopo.
 **La camera non si resetta** quando cambi variante. L'utente stava guardando il dettaglio
 del bracciolo: dopo il cambio colore deve ancora guardare quel bracciolo.
 
+**Le regole di combinazione hanno un test automatico, non solo uno sguardo prima della
+consegna.** La tabella del §1 lo dice chiaro: qui, se la scena sbaglia, non si perde
+atmosfera — si perde la vendita. Un giro manuale sotto scadenza verifica 2-3 combinazioni
+ovvie, non tutte quelle che una regola di incompatibilità genera; e una modifica successiva
+(nuova variante, nuova incompatibilità chiesta dal cliente a progetto consegnato) può
+rompere in silenzio un comportamento che oggi funziona, senza che nessuno rifaccia il giro
+a mano.
+
+Poiché lo stato vive nell'URL (sopra), il test è economico: **Playwright** — già nello
+stack come dipendenza di build, usato da `scripts/shots.mts` — naviga direttamente a ogni
+combinazione via URL e verifica, senza dover simulare i click:
+
+- ogni combinazione dichiarata **incompatibile** mostra l'opzione disabilitata con motivo
+  leggibile, mai un errore dopo il click;
+- ogni combinazione **valida** produce il materiale/mesh atteso, non quello della variante
+  precedente;
+- il cambio variante non rimonta il canvas (nessun flash o `<Suspense>` vuoto) e non
+  resetta la camera.
+
+Il test si scrive **quando si definiscono le regole di combinazione**, non dopo — sono la
+stessa informazione chiesta al cliente in `CLAUDE.md` §5: si trascrivono una volta in forma
+eseguibile, invece di restare solo nella testa di chi ha scritto il configuratore. Va
+rieseguito a ogni modifica a varianti o regole, non solo alla consegna.
+
 ---
 
 ## 7. Screenshot e misura — quello che headless non può dirti
@@ -257,5 +281,7 @@ pubblico reale. Il tuo portatile non è un test.
 - [ ] Nessun leak: `renderer.info` stabile dopo venti cambi variante
 - [ ] *(configuratori)* stato nell'URL, condivisibile e ricaricabile
 - [ ] *(configuratori)* combinazioni incompatibili disabilitate prima del click
+- [ ] *(configuratori)* regole di combinazione coperte da test Playwright (§6), non solo
+      verificate a mano — rieseguito se varianti o regole cambiano
 - [ ] *(configuratori)* fallback non-3D che permette comunque di configurare e convertire
 - [ ] Screenshot catturati con `--gpu`, non headless

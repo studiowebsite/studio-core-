@@ -1,0 +1,30 @@
+# Template CI — si copia in .github/workflows/ci.yml del repo cliente alla nascita
+# (rules/project-setup.md §1), non gira qui: la radice di studio-core non ha script
+# `build`/`lint` (non è un progetto Next.js). Copre solo l'automatizzabile — typecheck
+# implicito in `next build`, lint — su ogni push. Non sostituisce
+# rules/pre-delivery-checklist.md: quello resta il cancello manuale (budget misurati,
+# visual check, privacy) prima della consegna.
+
+name: CI
+
+on:
+  push:
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '23'
+          cache: 'pnpm'
+
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm lint
+      - run: pnpm build
