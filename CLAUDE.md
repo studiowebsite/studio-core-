@@ -82,7 +82,9 @@ Blender) non pesano sull'utente e stanno in `devDependencies` o fuori dal proget
    che c'è davvero e non quello che intendevi. Critica specifica coi numeri ("titolo 32px,
    il piano dice 24"; "gap 16, deve essere 24") → correggi → ricattura. Almeno due round;
    ci si ferma quando non restano differenze dal piano.
-6. **Audit.** `/impeccable critique` + `/impeccable audit`. Poi i cancelli di §6.
+6. **Audit.** `/impeccable critique` + `/impeccable audit`, poi skill `privacy-check`
+   (trattamenti dati, cookie, consenso — non sostituisce §5, li verifica su codice e sito
+   vivo). Poi i cancelli di §6.
 
 ## 5. Domande da fare subito — il progetto non parte senza
 
@@ -148,6 +150,7 @@ resto → `/impeccable clarify`.
 | Coreografia motion | `rules/motion.md` → skill `motion-design` |
 | API animazione | skill `gsap-*` (versione via Context7) |
 | Nuovo progetto, setup | `rules/project-setup.md` |
+| Trattamenti dati, prima della consegna | skill `privacy-check` |
 | Consegna | `rules/client-handoff.md` *(da scrivere)* |
 
 ## 10. Mai
