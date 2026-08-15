@@ -16,8 +16,12 @@ Tre fonti parlano di animazione. Si usano in quest'ordine, e **non si mescolano*
 1. **Questo file** — *se* animare, e le regole non negoziabili. Vince sempre.
 2. **motion-design** (skill LottieFiles) — *cosa* animare e con che intento: coreografia,
    durate, gerarchia degli ingressi. Si consulta in fase di **piano**, prima del codice.
-3. **gsap-\*** (skill GreenSock) — *come* scriverlo: API, sintassi. In fase di **build**,
-   con la versione verificata via Context7.
+3. **Come scriverlo**, a seconda del compito (CLAUDE.md §3 decide la divisione):
+   - scroll, pin, coreografie complesse → skill **gsap-\*** (GreenSock), versione
+     verificata via Context7;
+   - micro-interazioni semplici senza scroll (hover, stati, transizioni) → skill
+     **anime-js**, che a sua volta impone di verificare l'API via Context7 a ogni uso —
+     v4 ha riscritto la sintassi rispetto alla v3 diffusa a memoria.
 
 `animate.md` di Impeccable **non è in questa lista**: è un rilevatore di slop. Le sue
 segnalazioni si correggono, ma non detta la coreografia. Se contraddice questo file, vince

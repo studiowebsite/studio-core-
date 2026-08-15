@@ -59,7 +59,7 @@ Checklist intera: `webgl.md` §8. In sintesi, i punti che si dimenticano più sp
       non solo verificate a mano
 - [ ] Screenshot 3D catturati con `pnpm shots --gpu`, non in headless semplice
 
-## Se il progetto ha animazioni JS significative (GSAP, ScrollTrigger, Framer Motion)
+## Se il progetto ha animazioni JS significative (GSAP, ScrollTrigger, anime.js)
 
 Checklist intera: `motion.md` §6. In sintesi:
 

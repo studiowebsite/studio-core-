@@ -121,7 +121,37 @@ metodo, non di una promessa a voce fatta il giorno della consegna:
 Questo non sostituisce il contratto di manutenzione — dice solo cosa, tecnicamente, va
 rispettato una volta che quel contratto esiste.
 
-## 6. Checklist di consegna
+## 6. Retrospettiva — chiudere il ciclo di miglioramento
+
+Il pacchetto di consegna (§3) chiude cosa riceve il cliente. Questo passo chiude il
+**metodo**: appena la checklist di §7 è tutta spuntata, prima di considerare il progetto
+finito, si chiede esplicitamente cosa è andato meno bene — non si aspetta che emerga da
+solo al progetto successivo.
+
+Tre domande, sempre le stesse, rivolte a chi ha commissionato il lavoro (lo studio, non il
+cliente finale):
+
+- Cosa in questo progetto ha richiesto più correzioni o giri del previsto?
+- Cosa rifaresti in modo diverso se ripartissi da zero con lo stesso brief?
+- C'è un'istruzione che avresti voluto darmi prima, e non l'hai data perché non sapevi che
+  servisse?
+
+Le risposte non restano nella conversazione né in questo file: si salvano come memoria di
+tipo **feedback** nel sistema di memoria persistente. Un fix specifico di un progetto
+chiuso non torna indietro sui progetti già consegnati (`project-setup.md` §1, "si corregge
+in avanti") — ma il *metodo* che ne emerge (una domanda dimenticata al brief, un pattern di
+codice da evitare, un modo di comunicare che lo studio preferisce) protegge ogni progetto
+successivo, a partire dal prossimo.
+
+Se la risposta è "niente da migliorare", si registra comunque: conferma che l'approccio
+tenuto va bene, e vale quanto una correzione — non si scarta (vale lo stesso principio del
+sistema di memoria: si registra da successo **e** da correzione, non solo da errore).
+
+Non è un sondaggio di soddisfazione del cliente finale — quello, se serve, è commerciale e
+non tecnico. È la revisione di come *questo assistente* ha lavorato sul progetto, con chi
+lo ha diretto.
+
+## 7. Checklist di consegna
 
 - [ ] Cancelli (§1) verificati sul dominio di produzione, non solo in preview
 - [ ] Repo estratto da `studio-core` (`project-setup.md` §1/§7)
@@ -135,6 +165,8 @@ rispettato una volta che quel contratto esiste.
       "nessuna"
 - [ ] *(se c'è manutenzione)* cadenza patch, monitoraggio e tempi di risposta (§5)
       dichiarati e concordati, non lasciati impliciti
+- [ ] Retrospettiva fatta (§6): le tre domande poste, risposte salvate come memoria
+      feedback — non lasciate solo nella conversazione
 - [ ] Diritti sui contenuti già confermati (`project-setup.md` §6) — non si ridiscute qui,
       si verifica che sia ancora vero al momento della consegna
 - [ ] `materiali/` — destino deciso (resta allo studio / passa al cliente) e comunicato

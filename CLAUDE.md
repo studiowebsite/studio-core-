@@ -15,6 +15,27 @@ Conflitto tra questo file e Impeccable → **vince questo file** (conosce il cli
 
 ---
 
+## 0. Scala dell'intervento — si legge per prima
+
+Il workflow di §4 è tarato su **un progetto o una pagina nuova**. Applicarlo a una modifica
+di una riga costa più del lavoro stesso. Classifica prima di iniziare; nel dubbio, sali di
+livello.
+
+| Livello | Quando | Cosa si fa | Cosa si salta |
+|---|---|---|---|
+| **1 — Micro** | copy, un valore già in `DESIGN.md`, fix su qualcosa di già approvato. Nessuna decisione visiva nuova. | la modifica, e basta | piano, mockup, shots, Context7, critique |
+| **2 — Modifica** | un componente o una sezione esistente cambia forma o comportamento. `DESIGN.md` non cambia. | build → `pnpm shots` sulla pagina toccata → guardare i PNG | brief, mockup, approvazione |
+| **3 — Nuovo** | pagina, sezione o scena 3D nuova; oppure `DESIGN.md` cambia. | **§4 per intero, senza sconti** | niente |
+
+- **Context7** (§3) serve quando scrivi una chiamata API *nuova*, non quando cambi un
+  valore in codice che già gira.
+- **Se a metà scopri che il livello è più alto, fermati e dillo.** Un livello 1 non si
+  promuove in silenzio continuando a lavorare.
+- I cancelli di §6 e i divieti di §10 valgono a **ogni** livello. Un budget sforato è un
+  cancello anche dentro un livello 1.
+
+---
+
 ## 1. Chi siamo
 
 Web design **su misura**. Ogni cliente ha un'identità non scambiabile con quella di un
@@ -48,7 +69,7 @@ Il salto a "memorabile" è l'elemento firma (§4), dal cliente — non da questa
 |---|---|
 | Framework | Next.js (App Router) + TypeScript strict |
 | Stile | Tailwind + token da `DESIGN.md` |
-| Motion | GSAP + ScrollTrigger, Lenis, Framer Motion (micro-interazioni) |
+| Motion | GSAP + ScrollTrigger, Lenis (scroll e coreografie complesse); anime.js (micro-interazioni — hover, stati, transizioni semplici senza scroll) |
 | 3D | React Three Fiber + drei; Theatre.js per animazioni scriptate |
 | Asset 3D | glTF Draco/Meshopt, texture KTX2 |
 | Pipeline asset 3D | Blender (pulizia, bake) → `@gltf-transform/cli` — obbligatoria, vedi `rules/webgl.md` §3 |
@@ -62,10 +83,12 @@ Blender) non pesano sull'utente e stanno in `devDependencies` o fuori dal proget
 
 - **Token**: `DESIGN.md` decide, `design-tokens.ts` deriva. Mai un valore in due posti.
 - **Motion**, in quest'ordine, senza mescolare: `rules/motion.md` (vince) → skill
-  **motion-design** (cosa animare, in fase di piano) → skill **gsap-\*** (come, in build).
-  `animate.md` di Impeccable rileva slop, non detta coreografia.
-- **API**: prima di scrivere R3F, drei, Three.js, GSAP, Next.js → docs della versione
-  installata via **Context7**. Mai `<Canvas>` a memoria.
+  **motion-design** (cosa animare, in fase di piano) → skill **gsap-\*** (come, in build,
+  per scroll/coreografie complesse) o skill **anime-js** (come, per micro-interazioni —
+  API comunque sempre verificata via Context7, mai a memoria). `animate.md` di Impeccable
+  rileva slop, non detta coreografia.
+- **API**: prima di scrivere R3F, drei, Three.js, GSAP, anime.js, Next.js → docs della
+  versione installata via **Context7**. Mai `<Canvas>` a memoria.
 
 ## 4. Workflow — non saltare passaggi
 
@@ -169,13 +192,15 @@ flusso. Il resto → `/impeccable clarify`.
 | `<Canvas>` / scene 3D | `rules/webgl.md` |
 | Video su scroll | `rules/scroll-frames.md` |
 | Coreografia motion | `rules/motion.md` → skill `motion-design` |
-| API animazione | skill `gsap-*` (versione via Context7) |
+| API animazione — scroll/coreografie | skill `gsap-*` (versione via Context7) |
+| API animazione — micro-interazioni | skill `anime-js` (versione via Context7) |
 | Nuovo progetto, setup | `rules/project-setup.md` |
 | SEO, di default per ogni progetto | `rules/seo.md` |
 | Form di contatto/preventivo | `rules/forms.md` |
 | Trattamenti dati, prima della consegna | skill `privacy-check` |
 | Cancelli aggregati, prima del preview | `rules/pre-delivery-checklist.md` |
 | Consegna | `rules/client-handoff.md` |
+| Retrospettiva fine progetto | `rules/client-handoff.md` §6 |
 
 ## 10. Mai
 
