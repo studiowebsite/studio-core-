@@ -33,10 +33,13 @@ lint e build a ogni push, l'unico cancello che non dipende dal ricordarsi di lan
 mano. Non sostituisce niente di `rules/pre-delivery-checklist.md` — copre l'automatizzabile,
 quel file resta per tutto ciò che richiede un giudizio o una misura reale.
 
-**Perché sotto `studio-core` invece che un repo indipendente fin da subito:** si lavora da
-soli, su un solo PC — tenerli sotto la stessa radice è comodo (un editor aperto, un `cd` per
-passare da un cliente all'altro, la libreria di riferimenti a portata di mano). Non è un
-compromesso sull'isolamento, perché quello che conta è già garantito da altro:
+**Perché sotto `studio-core` invece che un repo indipendente fin da subito:** ogni persona
+dello studio clona `studio-core` sul proprio PC e dentro popola `sites/` con i repo cliente
+a cui ha accesso — tenerli sotto la stessa radice è comodo (un editor aperto, un `cd` per
+passare da un cliente all'altro, la libreria di riferimenti a portata di mano), e resta
+comodo allo stesso modo che si lavori da soli o in più persone, ciascuna sulla propria
+copia locale. Non è un compromesso sull'isolamento, perché quello che conta è già garantito
+da altro:
 - **git è separato per cliente** — `git init` proprio dentro `sites/<cliente>/`, non un
   submodule né una cartella dentro la storia di `studio-core`;
 - **il lockfile è proprio** (§4) — le dipendenze del cliente non vivono nel lockfile della
@@ -85,8 +88,12 @@ nei path rompono script, CLI e URL. Il nome leggibile va nel README, non nel fil
 ├── materiali/                          ← sorgenti del cliente (vedi §3)
 │   ├── README.md
 │   ├── foto/ · video/ · documenti/ · reference/
-└── mockups/                            ← concept di mockup-flow.md, sacrificabili
+└── mockups/                            ← fondamenta di marca (centerpiece-flow.md), sacrificabile
 ```
+
+Il centerpiece 3D/motion vero e proprio (`rules/centerpiece-flow.md`) **non** vive in
+`mockups/`: è troppo costoso da rifare, quindi si costruisce direttamente in `src/`,
+flaggato come pre-pipeline finché non è approvato.
 
 `DESIGN.md` e `PRODUCT.md` vivono **nel repo del cliente**, mai nella radice di studio-core.
 Se `/impeccable init` li scrive altrove, spostali qui.
@@ -95,8 +102,9 @@ Se `/impeccable init` li scrive altrove, spostali qui.
 
 Distinzione netta, sempre:
 
-- **`materiali/`** = archivio sorgente del cliente (foto originali, video girato, PDF, CAD).
-  Mai importato dal codice. È l'input.
+- **`materiali/`** = archivio sorgente (foto originali, video girato, PDF, CAD — **o**
+  video/immagini generati da AI via `rules/ai-generation.md`, che rientrano qui allo stesso
+  modo di un girato). Mai importato dal codice. È l'input.
 - **`public/`** = output ottimizzato che il sito serve davvero (immagini compresse, frame
   estratti, poster). È generato dai materiali.
 
@@ -147,9 +155,19 @@ Context7, non a memoria.
 ## 5. Online — GitHub e Vercel
 
 **GitHub.** Il repo cliente sta nell'**organizzazione dello studio**, non nell'account
-personale né in quello del cliente. Alla consegna lo trasferisci o dai accesso; finché il
+personale né in quello del cliente — vale anche se chi crea il repo in quel momento è
+l'unico a lavorarci: crearlo nell'account personale "per ora" è quello che rende poi
+necessario un trasferimento a parte. Alla consegna lo trasferisci o dai accesso; finché il
 lavoro è in corso la proprietà è dello studio. **Repo privato** sempre: il codice è tuo, e
 Vercel pubblica il sito online anche da un repo privato.
+
+**Se nello studio siete più persone**, ognuna dev'essere membro dell'organizzazione GitHub
+*prima* che serva accesso a un progetto specifico — l'invito è a livello di org, non va
+rifatto per ogni cliente. L'accesso al singolo repo resta comunque per progetto (§5,
+sopra): non tutti i membri dell'org lavorano per forza su tutti i clienti. Un collaboratore
+che entra si mette a posto in locale seguendo `ONBOARDING.md` nella radice di
+`studio-core` — quel file è pensato apposta per essere eseguito da Claude Code al primo
+avvio, passo per passo.
 
 Push: crea il repo vuoto su GitHub (no README/gitignore/license — li hai già), poi
 `git remote add origin` + `git push -u origin main`. Con LFS: verifica `git lfs version`,
@@ -170,6 +188,9 @@ Un preview Vercel è **pubblico**: chiunque abbia il link vede il sito.
 - **Niente stock non licenziati online.** Finché ci sono placeholder presi dal web, il sito
   resta locale. Placeholder dichiarati (grigi con scritta), mai immagini di cui non hai i
   diritti.
+- **Asset generati da AI (`rules/ai-generation.md`): disclosure al cliente e diritti d'uso
+  commerciale dello strumento verificati**, stesso cancello di uno stock non licenziato —
+  un contenuto sintetico non dichiarato è lo stesso rischio di fiducia.
 
 Questo è parte delle domande di §5 del CLAUDE.md — la licenza dei contenuti. Se emerge qui
 invece che al brief, il metodo ha fatto tardi.

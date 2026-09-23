@@ -2,9 +2,9 @@
 
 Come si chiude un progetto: non un click su "deploy", ma un passaggio di responsabilità —
 del codice, del dominio, dei contenuti, della sicurezza. Questo file esiste perché fino ad
-oggi il workflow del CLAUDE.md si fermava a "preview" (§4, passo 6): tutto quello che segue
+oggi il workflow del CLAUDE.md si fermava a "preview" (§4, passo 7): tutto quello che segue
 — chi possiede cosa dopo, chi risponde se il sito va giù, cosa riceve davvero il cliente —
-non aveva un metodo scritto. Si applica **dopo** l'audit (CLAUDE.md §4 passo 6) e **prima**
+non aveva un metodo scritto. Si applica **dopo** l'audit (CLAUDE.md §4 passo 7) e **prima**
 di considerare un progetto chiuso.
 
 Non è un contratto legale — quello lo scrive chi si occupa della parte commerciale — è la
@@ -28,7 +28,7 @@ di produzione reale**, dopo il cutover DNS (§2):
 - [ ] Budget JS/3D del CLAUDE.md §6 e webgl.md §3 ancora rispettati (un ultimo commit
       dell'ultimo giorno è la causa più comune di uno sforamento non visto)
 
-Se uno di questi cancelli è rosso, **non si passa al cutover**. Si torna al passo 5 del
+Se uno di questi cancelli è rosso, **non si passa al cutover**. Si tornano ai passi 6-7 del
 CLAUDE.md (visual check / audit), non si spedisce "quasi a posto".
 
 ## 2. Ordine delle operazioni

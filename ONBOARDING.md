@@ -46,7 +46,7 @@ diversa (e da approvare a parte) dentro ogni `sites/<cliente>/`, vedi
 
 ## 3. Browser per gli screenshot **[AUTOMATICO]**
 
-`pnpm shots` (script di visual check, vedi `CLAUDE.md` §4 punto 5) usa Playwright in due
+`pnpm shots` (script di visual check, vedi `CLAUDE.md` §4 punto 6) usa Playwright in due
 modalità: Chromium headless per layout/tipografia, Chrome reale per il 3D (`--gpu`,
 necessario perché il WebGL headless è software-rendered e i numeri non sono realistici —
 `.claude/rules/webgl.md` §7).
@@ -102,7 +102,7 @@ Non è qualcosa che Claude Code può concedere da qui: segnalalo come azione che
 
 Leggi `CLAUDE.md` per intero (si carica automaticamente a ogni sessione in un repo che lo
 contiene) e in particolare:
-- §4 — il workflow, `brief → piano/mockup → APPROVAZIONE → build → visual check → audit → preview`,
+- §4 — il workflow, `brief → fondamenta di marca → piano/centerpiece → APPROVAZIONE → build → visual check → audit → preview`,
   non si salta nessun passaggio;
 - §6 — i budget di performance sono cancelli, non osservazioni;
 - §10 — i "mai": niente push diretto su `main`, niente chiavi committate, niente consegna

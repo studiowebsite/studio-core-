@@ -6,7 +6,8 @@ di una scena WebGL vera quando il "movimento" è già girato in un video.
 
 Questo file adatta una tecnica nota **al nostro stack e alle nostre regole**. Il motore è
 collaudato; lo stile no. Qui c'è solo il come — proporzioni, tipografia e coreografia
-restano decisioni del mockup e del cliente, non di questo file.
+restano decisioni del centerpiece (`rules/centerpiece-flow.md`) e del cliente, non di
+questo file.
 
 Vale insieme a `rules/webgl.md` (§7 sugli screenshot 3D vale anche qui) e a
 `rules/motion.md` per la coreografia. Le **API** di GSAP/Lenis si recuperano via Context7,
@@ -16,15 +17,18 @@ non a memoria.
 
 ## 1. Quando usarla, e quando no
 
-**Usala se** il movimento esiste già come video: una ripresa del mare, del prodotto che
-ruota, di un processo. Il video è la sorgente, lo scroll è il controller.
+**Usala se** il movimento esiste come video — girato reale o generato con
+`rules/ai-generation.md` (oggi la prima scelta di default, non solo un ripiego quando manca
+un girato): una ripresa del mare, del prodotto che ruota, di un processo. Il video è la
+sorgente, lo scroll è il controller, non importa da dove viene il video.
 
 **Non usarla se** l'oggetto è interattivo (l'utente deve ruotarlo, configurarlo): quello è
 un configuratore, va in WebGL — vedi `rules/webgl.md`. Un video su scroll è **cinema
 controllato dallo scroll**, non interazione.
 
-**Non è mai obbligatoria.** È una delle direzioni possibili di un mockup, non il default di
-ogni home. Se emerge dal flusso a due concept (`rules/mockup-flow.md`), bene; non imporla.
+**Non è mai obbligatoria.** È una delle direzioni possibili per un centerpiece, non il
+default di ogni home. Se emerge dallo scope del progetto (`rules/centerpiece-flow.md`),
+bene; non imporla.
 
 ## 2. Cosa NON prendere dalla tecnica originale
 
@@ -32,8 +36,8 @@ La ricetta da cui viene questo file arriva con una "checklist premium" che è un
 unico travestito da legge**: hero 12rem obbligatori, marquee gigante d'obbligo, testo solo
 ai lati, 800vh di scroll fissi, counter che partono da zero. **Ignora tutto questo.** Sono
 esattamente le scelte che il nostro CLAUDE.md §2 vieta: se funzionerebbero identiche su un
-altro cliente, sono riempitivo. Proporzioni, tipografia e struttura nascono dal mockup
-scelto, non da una checklist.
+altro cliente, sono riempitivo. Proporzioni, tipografia e struttura nascono dal
+centerpiece approvato e da `DESIGN.md`, non da una checklist.
 
 ## 3. Pipeline dei frame
 
@@ -133,4 +137,4 @@ indice fisso e ferma il loop). In headless il canvas può uscire nero o a metà 
 - [ ] Nessun flash bianco: loader via solo a frame pronti
 - [ ] Canvas nitido su retina (`devicePixelRatio` applicato)
 - [ ] Screenshot catturati con `--gpu` a stato deterministico
-- [ ] Nessuna delle proporzioni "premium" imposte: la forma viene dal mockup
+- [ ] Nessuna delle proporzioni "premium" imposte: la forma viene dal centerpiece approvato

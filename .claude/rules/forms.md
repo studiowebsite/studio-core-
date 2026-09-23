@@ -30,7 +30,7 @@ per tutti i clienti.
   — mai un CAPTCHA visibile di default: costa conversione a un form che esiste per
   convertire.
 - **Consenso GDPR esplicito.** Checkbox non pre-selezionata, collegata all'informativa
-  privacy. Si intreccia con la skill `privacy-check` (CLAUDE.md §4.6): quando la esegui su
+  privacy. Si intreccia con la skill `privacy-check` (CLAUDE.md §4.7): quando la esegui su
   un progetto con form, verifica **specificamente** il meccanismo di consenso del form, non
   solo i cookie.
 - **Deliverability verificata**, se l'invio passa da un servizio email transazionale: SPF/
