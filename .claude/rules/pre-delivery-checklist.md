@@ -7,9 +7,9 @@ di CLAUDE.md §7: "un numero in due posti è un numero che diverge"). Esiste sol
 quei cancelli sono sparsi in 4-5 file diversi, e sotto la scadenza dell'ultimo giorno è
 facile spuntarne quattro su cinque e consegnare lo stesso.
 
-Si usa **una volta**, al passo "Audit" del workflow (CLAUDE.md §4, punto 6) — dopo il
+Si usa **una volta**, al passo "Audit" del workflow (CLAUDE.md §4, punto 7) — dopo il
 visual check, prima di mostrare il preview al cliente per l'approvazione. Non è un
-sostituto del visual check umano (CLAUDE.md §4 punto 5: si aprono i PNG e si guardano), che
+sostituto del visual check umano (CLAUDE.md §4 punto 6: si aprono i PNG e si guardano), che
 resta un passo separato e precedente.
 
 Per il cancello equivalente **dopo** l'approvazione — la ri-verifica sullo stesso tipo di
@@ -26,7 +26,7 @@ privacy, che restano giudizio umano.
 
 ## Sempre — ogni progetto, senza eccezioni
 
-- [ ] `pnpm shots` eseguito e ogni PNG **guardato**, non solo prodotto (CLAUDE.md §4.5)
+- [ ] `pnpm shots` eseguito e ogni PNG **guardato**, non solo prodotto (CLAUDE.md §4.6)
 - [ ] Budget del CLAUDE.md §6 rispettati: LCP, CLS, INP, JS iniziale < 180 kB gzip (bundle
       3D escluso), Lighthouse Performance ≥ 90 mobile, Accessibility 100 — misurati da
       `scripts/shots.mts`, mai dal browser personale
@@ -40,6 +40,8 @@ privacy, che restano giudizio umano.
       anti-spam, deliverability, stati di successo/errore
 - [ ] Diritti sui contenuti confermati (`project-setup.md` §6) — se ci sono ancora
       placeholder non dichiarati o stock non licenziati, non si passa oltre
+- [ ] *(se c'è un asset generato da AI)* checklist `rules/ai-generation.md` rispettata:
+      disclosure al cliente fatta, diritti d'uso commerciale dello strumento verificati
 
 ## Se il progetto monta un `<Canvas>` (scena 3D o configuratore)
 

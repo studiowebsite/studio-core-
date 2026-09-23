@@ -23,8 +23,8 @@ livello.
 
 | Livello | Quando | Cosa si fa | Cosa si salta |
 |---|---|---|---|
-| **1 — Micro** | copy, un valore già in `DESIGN.md`, fix su qualcosa di già approvato. Nessuna decisione visiva nuova. | la modifica, e basta | piano, mockup, shots, Context7, critique |
-| **2 — Modifica** | un componente o una sezione esistente cambia forma o comportamento. `DESIGN.md` non cambia. | build → `pnpm shots` sulla pagina toccata → guardare i PNG | brief, mockup, approvazione |
+| **1 — Micro** | copy, un valore già in `DESIGN.md`, fix su qualcosa di già approvato. Nessuna decisione visiva nuova. | la modifica, e basta | piano, centerpiece, shots, Context7, critique |
+| **2 — Modifica** | un componente o una sezione esistente cambia forma o comportamento. `DESIGN.md` non cambia. | build → `pnpm shots` sulla pagina toccata → guardare i PNG | brief, piano/centerpiece, approvazione |
 | **3 — Nuovo** | pagina, sezione o scena 3D nuova; oppure `DESIGN.md` cambia. | **§4 per intero, senza sconti** | niente |
 
 - **Context7** (§3) serve quando scrivi una chiamata API *nuova*, non quando cambi un
@@ -92,21 +92,38 @@ Blender) non pesano sull'utente e stanno in `devDependencies` o fuori dal proget
 
 ## 4. Workflow — non saltare passaggi
 
-`brief → piano/mockup → APPROVAZIONE → build → visual check → audit → preview`
+`brief → fondamenta di marca → piano/centerpiece → APPROVAZIONE → build → visual check → audit → preview`
 
 1. **Brief.** Le domande di §5, tutte, prima di tutto. Se manca l'essenziale, fermati.
-2. **Piano.** `/impeccable shape` per la struttura. **Home o pagina dove il design è il
-   punto** → non un piano a parole ma **due mockup a concept opposti** (`rules/mockup-flow.md`):
-   si sceglie guardando. Pagine secondarie → piano scritto: palette, font con ruoli, elemento
-   firma. Specifico di *questo* brief?
-3. **Approvazione.** Il piano/mockup si mostra prima di costruire.
-4. **Build.** Ogni valore dai token, mai hardcoded. Il detector Impeccable gira a ogni Edit.
-5. **Visual check.** `pnpm shots` (con 3D: `--gpu`). Poi **apri ogni PNG e analizzalo
+2. **Fondamenta di marca.** Subito dopo il brief, prima di qualunque piano o centerpiece:
+   logo vettoriale (se il cliente non ce l'ha, lo studio disegna un **logotipo minimo** —
+   marchio testuale, eventuale simbolo semplice dal brief, non un sistema di brand identity
+   completo), palette derivata da un colore di marca, coppia font display/body con ruoli
+   (§2). Si fissano in `DESIGN.md`: da qui in poi vale §10, niente esplorazione di
+   palette/font nei passaggi successivi. Approvazione leggera qui — palette, font, eventuale
+   logotipo mostrati, via libera prima di investire nel centerpiece. **Se `DESIGN.md`
+   esiste già** (pagina nuova su un progetto avviato, non un cliente nuovo), questo passo
+   si salta.
+3. **Piano/centerpiece.** `/impeccable shape` per la struttura. **Home o pagina dove il
+   design è il punto, con 3D o motion significativo** (deciso allo scope, §1) → non un
+   piano a parole ma si **costruisce per primo il centerpiece** — la scena 3D o il
+   video-scroll — come prototipo tecnico reale, poi il resto della pagina si progetta
+   attorno al suo ritmo (`rules/centerpiece-flow.md`). Mai il contrario: pagina già fatta e
+   motion incollato sopra come sfondo. **Home o pagina forte senza motion significativo** →
+   piano scritto: gerarchia, elemento firma (palette/font vengono già dalla fondamenta di
+   marca). Pagine secondarie → piano scritto: gerarchia, elemento firma. Specifico di
+   *questo* brief?
+4. **Approvazione.** Il piano/centerpiece si mostra funzionante prima di costruire il resto.
+5. **Build.** Se c'è un centerpiece approvato, si parte raffinando i suoi asset attraverso
+   la pipeline vera (`webgl.md` §3 / `scroll-frames.md` §3 — lo spike non è il deliverable
+   pesato), poi si costruisce il resto della pagina attorno al suo ritmo. Ogni valore dai
+   token, mai hardcoded. Il detector Impeccable gira a ogni Edit.
+6. **Visual check.** `pnpm shots` (con 3D: `--gpu`). Poi **apri ogni PNG e analizzalo
    come immagine** — non basta produrlo, va guardato: è l'unico modo per criticare quello
    che c'è davvero e non quello che intendevi. Critica specifica coi numeri ("titolo 32px,
    il piano dice 24"; "gap 16, deve essere 24") → correggi → ricattura. Almeno due round;
    ci si ferma quando non restano differenze dal piano.
-6. **Audit.** `/impeccable critique` + `/impeccable audit`, poi skill `privacy-check`
+7. **Audit.** `/impeccable critique` + `/impeccable audit`, poi skill `privacy-check`
    (trattamenti dati, cookie, consenso — non sostituisce §5, li verifica su codice e sito
    vivo). Poi i cancelli di §6. `rules/pre-delivery-checklist.md` è l'indice di tutti questi
    cancelli in un solo posto — si spunta prima di passare al preview.
@@ -119,18 +136,22 @@ Se manca qualcosa, dillo e **fermati**: se arriva a metà progetto, si rifà il 
 `/impeccable init`. Non ripeterla qui.
 
 **Operativa e legale** (nostra, Impeccable non la conosce):
-- Logo vettoriale, non PNG.
+- Logo vettoriale, non PNG. Se il cliente non ne ha uno → si disegna in §4.2 (fondamenta
+  di marca), logotipo minimo incluso di default, non a preventivo a parte.
 - Font con **licenza web valida** (il `.ttf` non è una licenza). Se manca → preventivo o open.
 - Testi e foto **definitivi prima del layout**. Mai costruire su lorem ipsum.
+- Video/immagine del centerpiece: girato reale o generato via `rules/ai-generation.md`
+  (oggi la prima scelta di default) — deciso al brief, non improvvisato in build. Se
+  generato: disclosure al cliente obbligatoria, non facoltativa.
 - *Configuratori*: file CAD; elenco varianti reali; **regole di combinazione** (quali
   varianti sono incompatibili — determina metà dell'architettura, chiedilo sempre).
 - Form di contatto/preventivo: dove devono arrivare le richieste (email diretta? un CRM
   che già usano?) — vedi `rules/forms.md`.
 - Se bilingue: chi fornisce le traduzioni e chi le rivede prima che vadano online — vedi §8.
 - Termini di pagamento legati alle fasi del workflow (es. acconto all'approvazione del
-  piano/mockup, saldo alla consegna) — concordati e scritti **prima** di iniziare il build,
+  piano/centerpiece, saldo alla consegna) — concordati e scritti **prima** di iniziare il build,
   non durante. Non è un cancello tecnico di questo file, ma se manca e il cliente sparisce
-  a metà, il lavoro fatto (brief, piano, mockup) non ha copertura.
+  a metà, il lavoro fatto (brief, fondamenta di marca, piano/centerpiece) non ha copertura.
 - Chi gestirà i contenuti dopo; domini/DNS e accessi; cookie/privacy/accessibilità PA.
 
 **Setup del progetto** → `rules/project-setup.md`: dove vive il repo, chi possiede
@@ -187,10 +208,11 @@ flusso. Il resto → `/impeccable clarify`.
 | Fase | Dove |
 |---|---|
 | Direzione, critica, audit | comandi `/impeccable` |
-| Home / design forte | `rules/mockup-flow.md` |
+| Home / design forte, centerpiece 3D-motion | `rules/centerpiece-flow.md` |
 | Token del progetto | `DESIGN.md` |
 | `<Canvas>` / scene 3D | `rules/webgl.md` |
 | Video su scroll | `rules/scroll-frames.md` |
+| Video/immagine generati da AI (skill `artprompter`) | `rules/ai-generation.md` |
 | Coreografia motion | `rules/motion.md` → skill `motion-design` |
 | API animazione — scroll/coreografie | skill `gsap-*` (versione via Context7) |
 | API animazione — micro-interazioni | skill `anime-js` (versione via Context7) |
@@ -204,7 +226,7 @@ flusso. Il resto → `/impeccable clarify`.
 
 ## 10. Mai
 
-- Partire senza le risposte di §5, o costruire prima del piano/mockup approvato.
+- Partire senza le risposte di §5, o costruire prima del piano/centerpiece approvato.
 - Definire un token fuori da `DESIGN.md`. Aggiungere una dipendenza senza chiedere.
 - Committare chiavi: stanno in `.env.local` o config utente, **mai** in `.mcp.json`,
   `settings.json` o sotto git. MCP che vuole una chiave → livello utente, non progetto.
