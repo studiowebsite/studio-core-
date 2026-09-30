@@ -22,11 +22,16 @@ questo repo non dà accesso a nessun progetto: quello si aggiunge a parte, per c
 ## 1. Prerequisiti — verifica versioni **[AUTOMATICO]**
 
 ```bash
-node -v      # serve Node 20+
-pnpm -v      # serve pnpm 9+ — se manca: npm install -g pnpm
+node -v      # la versione (major) scritta in .node-version — oggi 24
+pnpm -v      # se manca: corepack enable pnpm (se chiede permessi di amministratore: https://pnpm.io/installation)
 git --version
 git lfs version   # se manca: vedi step 4
 ```
+
+Le versioni esatte non stanno qui ma nel progetto (`.node-version`, `packageManager` nel
+`package.json`): pnpm scarica e usa da solo quella giusta, e allo step 3 bis
+`pnpm verifica-pc` controlla tutto in una volta — su Windows e su Mac con lo stesso esito
+(`.claude/rules/cross-platform.md`).
 
 Se `node` o `pnpm` mancano del tutto, fermati e segnala all'utente: l'installazione del
 runtime non è automatizzabile in sicurezza da qui (dipende dal loro sistema/gestore
@@ -52,12 +57,24 @@ necessario perché il WebGL headless è software-rendered e i numeri non sono re
 `.claude/rules/webgl.md` §7).
 
 ```bash
-npx playwright install chromium
-npx playwright install chrome
+pnpm exec playwright install chromium
 ```
 
-Verifica che funzioni con un progetto qualsiasi che abbia `scripts/shots.mts` (se non c'è
-ancora nessun progetto cliente clonato, questo passo si riverifica al primo).
+`pnpm exec`, non `npx`: scarica il browser della versione di Playwright fissata nel
+progetto, la stessa su ogni PC — con un'altra versione le catture non si confrontano.
+Chrome per `--gpu` è il Google Chrome normale: se manca, si installa da
+https://www.google.com/chrome/. Ogni repo cliente ha il suo Playwright: il comando si
+rilancia anche dentro `sites/<cliente>/` dopo il suo `pnpm install`.
+
+## 3 bis. Verifica del PC **[AUTOMATICO]**
+
+```bash
+pnpm verifica-pc
+```
+
+Controlla Node, pnpm, git, Git LFS, identità git, Playwright e apre davvero i due browser.
+Ogni riga `[errore]` ha sotto il comando o il link per sistemarla. Si rilancia finché
+dice "Tutto a posto" — e dentro ogni `sites/<cliente>/`, che ha versioni proprie.
 
 ## 4. Git LFS **[AUTOMATICO, se manca]**
 
@@ -172,12 +189,13 @@ Dopo aver eseguito gli step automatici, riporta uno stato per voce:
 [ok/fallito] Node/pnpm/git/git-lfs — versioni verificate
 [ok/fallito] pnpm install
 [ok/fallito] Playwright — chromium + chrome installati
+[ok/fallito] pnpm verifica-pc — nessuna riga [errore]
 [ok/fallito] git lfs install
 [ok/da fare] Identità git (user.name / user.email) impostata
 [da fare]    MCP (context7, chrome-devtools) — in attesa di credenziali dall'utente
 [da fare]    Accesso ai repo cliente — in attesa di invito dallo studio
 ```
 
-Il setup locale è completo quando le prime cinque righe sono `ok`. Le ultime due restano
+Il setup locale è completo quando le prime sei righe sono `ok`. Le ultime due restano
 `da fare` finché non arriva un input che solo l'utente può dare — non è un errore, è il
 punto in cui la skill deve fermarsi e chiedere.
