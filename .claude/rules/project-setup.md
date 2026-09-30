@@ -146,6 +146,14 @@ della base — e chi apre `sites/<cliente>/` da solo, o Vercel al deploy, trover
 `package.json` senza lockfile: l'install non è riproducibile, e si manifesta come "in
 locale va, in preview no".
 
+**`packageManager` nel `package.json` del cliente, alla nascita.** `"packageManager":
+"pnpm@<versione>"` — la stessa di studio-core (sotto, "Versioni e comandi uguali"). Non è una
+formalità: è la fonte unica da cui `pnpm/action-setup` legge la versione in CI. Senza,
+`.github/workflows/ci.yml` (§1) fallisce al primo step con *"No pnpm version is
+specified"* — la CI è rossa dal primo push, prima ancora di provare a buildare, e il
+cancello che doveva girare da solo non gira. La versione **non** si scrive anche nel
+workflow: due posti divergono.
+
 Se `pnpm install` chiede l'approvazione per pacchetti con build script nativi (`sharp`,
 `@swc/core`, `@parcel/watcher`...), la lista va in `allowBuilds` dentro il
 `pnpm-workspace.yaml` **del cliente** — non in quello di studio-core: ogni progetto
@@ -212,6 +220,8 @@ invece che al brief, il metodo ha fatto tardi.
 - [ ] DESIGN.md e PRODUCT.md nel repo del cliente
 - [ ] materiali/ e public/ separati; LFS solo su materiali/
 - [ ] `pnpm install` lanciato súbito dentro `sites/<cliente>/`, non rimandato (§4)
+- [ ] `packageManager` presente nel `package.json` del cliente (§4) — senza, la CI è
+      rossa dal primo push
 - [ ] Repo GitHub privato, nell'organizzazione dello studio
 - [ ] LFS verificato dopo il push (file veri, non puntatori)
 - [ ] Diritti sui contenuti confermati prima di qualsiasi deploy pubblico
