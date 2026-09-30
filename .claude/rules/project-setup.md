@@ -147,7 +147,7 @@ della base — e chi apre `sites/<cliente>/` da solo, o Vercel al deploy, trover
 locale va, in preview no".
 
 **`packageManager` nel `package.json` del cliente, alla nascita.** `"packageManager":
-"pnpm@<versione>"` — la stessa versione che usi in locale (`pnpm --version`). Non è una
+"pnpm@<versione>"` — la stessa di studio-core (sotto, "Versioni e comandi uguali"). Non è una
 formalità: è la fonte unica da cui `pnpm/action-setup` legge la versione in CI. Senza,
 `.github/workflows/ci.yml` (§1) fallisce al primo step con *"No pnpm version is
 specified"* — la CI è rossa dal primo push, prima ancora di provare a buildare, e il
