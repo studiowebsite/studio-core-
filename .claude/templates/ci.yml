@@ -22,7 +22,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: '23'
+          node-version-file: '.node-version'   # una sola fonte, uguale ai PC (rules/cross-platform.md)
           cache: 'pnpm'
 
       - run: pnpm install --frozen-lockfile

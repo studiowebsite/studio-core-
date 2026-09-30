@@ -5,14 +5,17 @@
   "main": "index.js",
   "scripts": {
     "shots": "node scripts/shots.mts",
+    "serve": "node scripts/serve.mts",
+    "verifica-pc": "node scripts/verifica-pc.mts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
+  "packageManager": "pnpm@12.6.0",
   "devDependencies": {
-    "playwright": "^1.61.1",
+    "playwright": "1.63.0",
     "tsx": "^4.23.1"
   }
 }

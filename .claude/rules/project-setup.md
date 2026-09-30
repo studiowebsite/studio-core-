@@ -23,7 +23,7 @@ mkdir -p sites/<cliente> && cd sites/<cliente>
 cp ../../CLAUDE.md .
 cp -r ../../.claude .
 cp -r ../../scripts .
-cp ../../.gitignore ../../.gitattributes .
+cp ../../.gitignore ../../.gitattributes ../../.node-version .
 mkdir -p .github/workflows && cp .claude/templates/ci.yml .github/workflows/ci.yml
 git init
 ```
@@ -152,6 +152,13 @@ Se `pnpm install` chiede l'approvazione per pacchetti con build script nativi (`
 approva i propri. La config pnpm ha cambiato nome tra le release → verificala via
 Context7, non a memoria.
 
+**Versioni e comandi uguali a studio-core**, nel `package.json` del cliente, prima del
+primo `pnpm install` (motivo in `rules/cross-platform.md` §2): `"packageManager"` con la
+stessa versione esatta di pnpm, Playwright con la stessa versione esatta (senza `^`), e
+gli script `shots`, `serve` e `verifica-pc` che puntano a `scripts/`. Si copiano da
+`package.json` di studio-core, non si riscrivono a memoria. Poi `pnpm verifica-pc`: deve
+uscire senza errori.
+
 ## 5. Online — GitHub e Vercel
 
 **GitHub.** Il repo cliente sta nell'**organizzazione dello studio**, non nell'account
@@ -198,7 +205,9 @@ invece che al brief, il metodo ha fatto tardi.
 ## 7. Checklist di nascita
 
 - [ ] Repo cliente in `sites/<cliente>/`, con `.git` e lockfile propri, nome senza spazi
-- [ ] Config di studio-core copiata (CLAUDE.md, .claude/, scripts/, .gitignore, .gitattributes)
+- [ ] Config di studio-core copiata (CLAUDE.md, .claude/, scripts/, .gitignore, .gitattributes, .node-version)
+- [ ] `package.json` con pnpm e Playwright alle versioni esatte di studio-core, script
+      `shots`/`serve`/`verifica-pc`; `pnpm verifica-pc` senza errori (§4)
 - [ ] `.github/workflows/ci.yml` copiato dal template e verificato in verde dopo il primo push
 - [ ] DESIGN.md e PRODUCT.md nel repo del cliente
 - [ ] materiali/ e public/ separati; LFS solo su materiali/

@@ -217,6 +217,7 @@ flusso. Il resto → `/impeccable clarify`.
 | API animazione — scroll/coreografie | skill `gsap-*` (versione via Context7) |
 | API animazione — micro-interazioni | skill `anime-js` (versione via Context7) |
 | Nuovo progetto, setup | `rules/project-setup.md` |
+| Windows e Mac: strumenti, versioni, trappole di layout | `rules/cross-platform.md` |
 | SEO, di default per ogni progetto | `rules/seo.md` |
 | Form di contatto/preventivo | `rules/forms.md` |
 | Trattamenti dati, prima della consegna | skill `privacy-check` |

@@ -26,7 +26,9 @@ privacy, che restano giudizio umano.
 
 ## Sempre — ogni progetto, senza eccezioni
 
-- [ ] `pnpm shots` eseguito e ogni PNG **guardato**, non solo prodotto (CLAUDE.md §4.6)
+- [ ] `pnpm shots` eseguito e ogni PNG **guardato**, non solo prodotto (CLAUDE.md §4.6) —
+      anche i profili Windows e MacBook, e nessun profilo "classic" segnalato a 0px
+      (`rules/cross-platform.md` §4)
 - [ ] Budget del CLAUDE.md §6 rispettati: LCP, CLS, INP, JS iniziale < 180 kB gzip (bundle
       3D escluso), Lighthouse Performance ≥ 90 mobile, Accessibility 100 — misurati da
       `scripts/shots.mts`, mai dal browser personale

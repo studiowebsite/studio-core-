@@ -72,7 +72,11 @@ catturare il tuo lavoro in modo ripetibile — gli screenshot escono a metà tra
 
 **Regola:** ogni pagina con animazione JS espone un hook di debug — una funzione globale
 (es. `window.__seekAnimationsToEnd()`) che porta tutte le timeline e i trigger allo stato
-finale e ferma il loop. Lo script di screenshot la chiama prima di scattare.
+finale e ferma il loop. Lo script di screenshot la chiama prima di scattare la pagina
+intera, restando in fondo: in cima le animazioni legate allo scroll tornerebbero
+all'inizio durante lo scatto. Limite noto: header e elementi fixed/sticky, in quella
+cattura, finiscono disegnati a fondo pagina. Con `--viewport-only` invece non la chiama:
+fotografa la prima schermata com'è all'apertura (dettagli in `scripts/shots.mts`).
 
 Costa una riga se lo decidi all'inizio. È una rifattorizzazione se te ne accorgi dopo.
 Vedi anche `rules/webgl.md` §7 per il caso del canvas.
