@@ -53,10 +53,12 @@ const VIEWPORTS: Viewport[] = [
   { name: '01-mobile', width: 390, height: 844, dpr: 2, mobile: true, scrollbar: 'overlay' },
   { name: '02-tablet', width: 768, height: 1024, dpr: 2, mobile: true, scrollbar: 'overlay' },
   { name: '03-laptop', width: 1440, height: 900, dpr: 1, mobile: false, scrollbar: 'classic' },
+  // PC Windows 1920×1080 al 100% (senza zoom), come il PC dello studio. Alto quanto
+  // tutto lo schermo, non quanto la finestra di Chrome, che è più bassa.
   { name: '04-desktop', width: 1920, height: 1080, dpr: 1, mobile: false, scrollbar: 'classic' },
-  // Portatile Windows: schermo 1920×1080 con ridimensionamento al 125% (il default di
-  // Windows sui portatili), tolte barra delle applicazioni e barre di Chrome. Finestra
-  // bassa: è qui che le hero a 100svh e ciò che sborda si rompono.
+  // Portatile Windows: schermo 1920×1080 con ridimensionamento al 125%, tolte barra delle
+  // applicazioni e barre di Chrome. Un caso comune, non il PC dello studio: serve a
+  // trovare i problemi delle finestre basse (hero a 100svh, ciò che sborda).
   { name: '05-laptop-win', width: 1536, height: 730, dpr: 1.25, mobile: false, scrollbar: 'classic' },
   // MacBook Air 13": risoluzione di default 1470×956, tolte barra dei menu e barre di Chrome.
   { name: '06-macbook', width: 1470, height: 830, dpr: 2, mobile: false, scrollbar: 'overlay' },
