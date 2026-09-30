@@ -47,9 +47,10 @@ a `pnpm shots`, che fotografava sempre "da Mac" su qualunque PC.
   `viewBox` largo `innerWidth` dentro un contenitore largo `100%` si rimpicciolisce
   dell'1% su Windows e a fondo pagina finisce decine di px fuori posto. Per decidere un
   layout in JS si usa `matchMedia`, che coincide con le media query CSS.
-- **Finestre basse.** Un portatile Windows con ridimensionamento al 125% mostra circa
-  1536×730; un MacBook Air circa 1470×830. Hero a `100svh` e ciò che sborda si provano sul
-  basso, non solo su un monitor grande.
+- **Finestre basse.** Non tutti i PC Windows sono come quello dello studio (1920×1080 al
+  100%, senza zoom): un portatile Windows con ridimensionamento al 125%, caso comune,
+  mostra circa 1536×730; un MacBook Air circa 1470×830. Hero a `100svh` e ciò che sborda si
+  provano sul basso, non solo su un monitor grande.
 - **Font.** `-webkit-font-smoothing` agisce solo su Mac, e i pesi sottili a corpo grande
   su Windows escono diversi: si guardano nella cattura Windows, non si danno per buoni.
 - **Maiuscole nei nomi dei file.** Mac e Windows non distinguono `Hero.tsx` da `hero.tsx`,
@@ -59,10 +60,18 @@ a `pnpm shots`, che fotografava sempre "da Mac" su qualunque PC.
 
 ## 4. Visual check
 
-- `pnpm shots` scatta profili con barra classica di Windows (`03-laptop`, `04-desktop`,
-  `05-laptop-win`) e con barra sovrapposta (`01-mobile`, `02-tablet`, `06-macbook`), e
-  scrive quanti px toglie la barra. Se un profilo classic segna 0px, la cattura non è "da
-  Windows": lo segnala tra i problemi, e quella cattura non vale.
+- `pnpm shots` scatta profili con barra classica di Windows e con barra sovrapposta, e
+  scrive quanti px toglie la barra. Cosa rappresenta ciascuno:
+
+  | Profilo | Rappresenta | Barra |
+  |---|---|---|
+  | `01-mobile`, `02-tablet` | telefono, tablet | sovrapposta |
+  | `03-laptop`, `04-desktop` | monitor Windows al 100%, senza zoom — `04` è come il PC dello studio, ma alto quanto tutto lo schermo e non quanto la finestra | classica |
+  | `05-laptop-win` | portatile Windows al 125%, caso comune, non il PC dello studio | classica |
+  | `06-macbook` | MacBook Air 13" | sovrapposta |
+
+- Se un profilo classic segna 0px, la cattura non è "da Windows": lo segnala tra i
+  problemi, e quella cattura non vale.
 - **Su Mac** (barre di sistema sovrapposte) la cattura a pagina intera dei profili
   Windows non è affidabile: durante lo scatto la pagina torna per un momento larga
   quanto la finestra e si ridispone "da Mac". `shots` se ne accorge e lo scrive tra i
