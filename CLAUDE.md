@@ -87,6 +87,11 @@ Blender) non pesano sull'utente e stanno in `devDependencies` o fuori dal proget
   per scroll/coreografie complesse) o skill **anime-js** (come, per micro-interazioni —
   API comunque sempre verificata via Context7, mai a memoria). `animate.md` di Impeccable
   rileva slop, non detta coreografia.
+- **Video (Remotion)**: le skill `remotion-*` servono solo a **produrre file video** (clip
+  social, video di lancio, video sorgente di un centerpiece grafico) in un progetto Remotion
+  a parte — mai per animare un sito, nemmeno se la richiesta dice "animazione": lì vale la
+  riga Motion sopra. Licenza: gratis fino a 3 dipendenti, oltre serve la Company License —
+  verificarla prima di un lavoro pagato.
 - **API**: prima di scrivere R3F, drei, Three.js, GSAP, anime.js, Next.js → docs della
   versione installata via **Context7**. Mai `<Canvas>` a memoria.
 
@@ -216,6 +221,7 @@ flusso. Il resto → `/impeccable clarify`.
 | Coreografia motion | `rules/motion.md` → skill `motion-design` |
 | API animazione — scroll/coreografie | skill `gsap-*` (versione via Context7) |
 | API animazione — micro-interazioni | skill `anime-js` (versione via Context7) |
+| Video prodotti in codice (social, lancio, sorgente grafico) | skill `remotion-*` — progetto a parte, mai nel sito |
 | Nuovo progetto, setup | `rules/project-setup.md` |
 | Windows e Mac: strumenti, versioni, trappole di layout | `rules/cross-platform.md` |
 | SEO, di default per ogni progetto | `rules/seo.md` |
