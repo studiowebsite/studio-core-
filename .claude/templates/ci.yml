@@ -4,6 +4,11 @@
 # implicito in `next build`, lint — su ogni push. Non sostituisce
 # rules/pre-delivery-checklist.md: quello resta il cancello manuale (budget misurati,
 # visual check, privacy) prima della consegna.
+#
+# La versione di pnpm NON si scrive qui: `pnpm/action-setup` la legge dal campo
+# `packageManager` di package.json, che è già la fonte usata da pnpm in locale. Se il
+# campo manca, l'action si ferma al primo step con "No pnpm version is specified" e la
+# CI è rossa dal primo push — vedi la checklist di rules/project-setup.md §7.
 
 name: CI
 
@@ -26,5 +31,24 @@ jobs:
           cache: 'pnpm'
 
       - run: pnpm install --frozen-lockfile
-      - run: pnpm lint
-      - run: pnpm build
+
+      # `lint` e `build` esistono solo da quando il progetto ha un'app Next.js: in fase
+      # di brief e mockup il repo ha ancora solo `shots`. Lo step si salta da sé invece
+      # di lasciare il repo rosso per settimane — una spunta rossa cronica si smette di
+      # guardare, ed è il modo più rapido per non accorgersi di quella vera. Diventa un
+      # cancello reale, senza doversene ricordare, appena lo script compare.
+      - name: lint
+        run: |
+          if node -e "process.exit(require('./package.json').scripts?.lint ? 0 : 1)"; then
+            pnpm lint
+          else
+            echo "::notice::script 'lint' assente: progetto ancora senza app Next.js, step saltato"
+          fi
+
+      - name: build
+        run: |
+          if node -e "process.exit(require('./package.json').scripts?.build ? 0 : 1)"; then
+            pnpm build
+          else
+            echo "::notice::script 'build' assente: progetto ancora senza app Next.js, step saltato"
+          fi
