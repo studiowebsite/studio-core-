@@ -25,8 +25,13 @@ cp -r ../../.claude .
 cp -r ../../scripts .
 cp ../../.gitignore ../../.gitattributes ../../.node-version .
 mkdir -p .github/workflows && cp .claude/templates/ci.yml .github/workflows/ci.yml
+cp .claude/templates/CODEOWNERS .github/CODEOWNERS
 git init
 ```
+
+`.github/CODEOWNERS` fa sì che ogni PR chieda la revisione a entrambi i soci: chi non l'ha
+aperta riceve la notifica di GitHub, chiunque dei due la crei. Vale solo dal momento in cui
+il file è sul branch `main` del repo, e solo per chi ha accesso in scrittura al repo.
 
 Il template CI copiato in `.github/workflows/ci.yml` gira solo dopo il primo push (§5):
 lint e build a ogni push, l'unico cancello che non dipende dal ricordarsi di lanciarlo a
