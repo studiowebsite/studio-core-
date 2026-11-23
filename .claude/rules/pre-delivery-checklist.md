@@ -74,6 +74,15 @@ Checklist intera: `motion.md` §6. In sintesi:
       altrimenti gli screenshot sopra sono a metà transizione senza che tu lo sappia
 - [ ] Nessuna allocazione nei loop di animazione
 
+## Se il progetto ha grafici o una dashboard (Bklit)
+
+Checklist intera: `dashboard.md` in fondo. In sintesi:
+
+- [ ] Colori dei grafici da `DESIGN.md`, nessun default di Bklit rimasto
+- [ ] `prefers-reduced-motion` gestito a mano su ogni serie (Bklit lo copre solo in parte)
+- [ ] Grafici fermi in `__seekAnimationsToEnd()`; live chart in pausa a tab non visibile
+- [ ] Numeri chiave leggibili come testo senza JS; ogni grafico con nome accessibile
+
 ## Se il progetto ha video legato allo scroll
 
 Checklist intera: `scroll-frames.md` §8. In sintesi:

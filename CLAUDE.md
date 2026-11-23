@@ -73,6 +73,7 @@ Il salto a "memorabile" è l'elemento firma (§4), dal cliente — non da questa
 | 3D | React Three Fiber + drei; Theatre.js per animazioni scriptate |
 | Asset 3D | glTF Draco/Meshopt, texture KTX2 |
 | Pipeline asset 3D | Blender (pulizia, bake) → `@gltf-transform/cli` — obbligatoria, vedi `rules/webgl.md` §3 |
+| Grafici e dashboard | Bklit UI (registry shadcn, sorgente copiato nel progetto) — vedi `rules/dashboard.md` |
 | CMS | Sanity |
 | i18n (se bilingue) | next-intl |
 | Deploy | Vercel, preview URL per branch |
@@ -86,14 +87,16 @@ Blender) non pesano sull'utente e stanno in `devDependencies` o fuori dal proget
   **motion-design** (cosa animare, in fase di piano) → skill **gsap-\*** (come, in build,
   per scroll/coreografie complesse) o skill **anime-js** (come, per micro-interazioni —
   API comunque sempre verificata via Context7, mai a memoria). `animate.md` di Impeccable
-  rileva slop, non detta coreografia.
+  rileva slop, non detta coreografia. Il pacchetto `motion` entra solo come dipendenza di
+  Bklit, dentro i grafici: mai per animare il resto del sito (`rules/dashboard.md` §3).
 - **Video (Remotion)**: le skill `remotion-*` servono solo a **produrre file video** (clip
   social, video di lancio, video sorgente di un centerpiece grafico) in un progetto Remotion
   a parte — mai per animare un sito, nemmeno se la richiesta dice "animazione": lì vale la
   riga Motion sopra. Licenza: gratis fino a 3 dipendenti, oltre serve la Company License —
   verificarla prima di un lavoro pagato.
 - **API**: prima di scrivere R3F, drei, Three.js, GSAP, anime.js, Next.js → docs della
-  versione installata via **Context7**. Mai `<Canvas>` a memoria.
+  versione installata via **Context7**. Mai `<Canvas>` a memoria. Per Bklit la fonte è il
+  sorgente copiato in `components/charts/`, non i docs.
 
 ## 4. Workflow — non saltare passaggi
 
@@ -226,6 +229,7 @@ flusso. Il resto → `/impeccable clarify`.
 | Windows e Mac: strumenti, versioni, trappole di layout | `rules/cross-platform.md` |
 | SEO, di default per ogni progetto | `rules/seo.md` |
 | Form di contatto/preventivo | `rules/forms.md` |
+| Grafici, dashboard, card KPI | `rules/dashboard.md` → skill `bklit-ui` / `bklit-ui-design` |
 | Trattamenti dati, prima della consegna | skill `privacy-check` |
 | Cancelli aggregati, prima del preview | `rules/pre-delivery-checklist.md` |
 | Consegna | `rules/client-handoff.md` |
