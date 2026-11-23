@@ -1,6 +1,22 @@
 {
   "version": 1,
   "skills": {
+    "bklit-ui": {
+      "source": "bklit/bklit-ui",
+      "commit": "76299da6981e2494836be5ce842720a7fb057891",
+      "sourceType": "github",
+      "skillPath": "skills/bklit-ui/SKILL.md",
+      "computedHash": "e0ae1b633fe1ca75085d41d9d7ca113db88b1dc7c9f17e5d500052fca829a8ed",
+      "installMode": "copy"
+    },
+    "bklit-ui-design": {
+      "source": "bklit/bklit-ui",
+      "commit": "76299da6981e2494836be5ce842720a7fb057891",
+      "sourceType": "github",
+      "skillPath": "skills/bklit-ui-design/SKILL.md",
+      "computedHash": "1b0700129b54bba8ae0100bf32b9d9fa858bc353aa728cd7f6910fcac2654d45",
+      "installMode": "copy"
+    },
     "remotion-best-practices": {
       "source": "remotion-dev/skills",
       "sourceType": "github",
